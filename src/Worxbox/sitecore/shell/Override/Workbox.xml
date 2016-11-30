@@ -2,7 +2,7 @@
 <control xmlns:def="Definition" xmlns="http://schemas.sitecore.net/Visual-Studio-Intellisense">
   <Workbox>
     <Favicon Src="/sitecore/images/favicon.ico" runat="server" />
-    <CodeBeside Type="Sitecore.Modules.Worxbox.Feature.Client.Workbox.WorxboxForm, Sitecore.Modules."/>
+    <CodeBeside Type="CapTech.Modules.Worxbox.Feature.Client.Workbox.WorxboxForm, CapTech.Modules.Worxbox.Feature.Client"/>
     <Stylesheet Src="Content Manager.css" DeviceDependant="true"/>
     <Stylesheet Src="Ribbon.css" DeviceDependant="true"/>
     <Stylesheet Src="Workbox.css" DeviceDependant="true"/>
