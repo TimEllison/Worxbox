@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using CapTech.Modules.Worxbox.Foundation.Models;
 using Sitecore;
 using Sitecore.Data;
@@ -27,7 +29,24 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
 
         public IEnumerable<Item> GetWorxboxItems(WorxboxWorkflowState state, Item item)
         {
-            return null;
+            var referencedItems = Globals.LinkDatabase.GetReferences(item);
+            var results = new List<Item>();
+            foreach(var reference in referencedItems)
+            {
+                var refItem = Context.ContentDatabase.GetItem(reference.TargetItemID);
+
+                if (refItem != null && refItem["__Workflow state"].Equals(state.WorkflowState.StateID))
+                {
+                    if (!results.Any(
+                            x => x.ID == refItem.ID && x.Language == refItem.Language && x.Version == refItem.Version))
+                    {
+                        results.Add(refItem);
+                    }
+                    
+                }
+            }
+
+            return results;
         }
 
         public IEnumerable<Item> GetWorkflowCommands()
@@ -36,9 +55,29 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
             return items;
         }
 
+        public IEnumerable<ID> GetWorkflowCommandIDs()
+        {
+            return GetWorkflowCommands().Select(x=>x.ID);
+        }
+
+        public IEnumerable<Item> GetWorxboxTemplates()
+        {
+            var items = ((MultilistField) _settings.Fields[PageTemplatesFieldId]).GetItems();
+            return items;
+        }
+
+        public IEnumerable<ID> GetWorxboxTemplateIDs()
+        {
+            return GetWorxboxTemplates().Select(x => x.ID);
+        }
+
         public bool IsWorxboxItem(WorkflowState state, DataUri item)
         {
-            return false;
+            var contentItem = Context.ContentDatabase.GetItem(item.ItemID, item.Language, item.Version);
+            var stateHasCommands =
+                Context.ContentDatabase.GetItem(state.StateID).Children.Any(x => GetWorkflowCommandIDs().Contains(x.ID));
+            var itemIsWorkboxTemplate = GetWorxboxTemplateIDs().Contains(contentItem.TemplateID);
+            return stateHasCommands && itemIsWorkboxTemplate;
         }
     }
 }

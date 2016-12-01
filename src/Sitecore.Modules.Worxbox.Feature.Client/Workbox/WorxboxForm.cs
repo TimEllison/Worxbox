@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using CapTech.Modules.Worxbox.Foundation.Models;
@@ -16,6 +17,7 @@ using Sitecore.Data.Managers;
 using Sitecore.Diagnostics;
 using Sitecore.Exceptions;
 using Sitecore.Globalization;
+using Sitecore.Pipelines;
 using Sitecore.Pipelines.GetWorkflowCommentsDisplay;
 using Sitecore.Resources;
 using Sitecore.Security.Accounts;
@@ -34,6 +36,7 @@ using Sitecore.Web.UI.Sheer;
 using Sitecore.Web.UI.WebControls.Ribbons;
 using Sitecore.Web.UI.XmlControls;
 using Sitecore.Workflows;
+using Sitecore.Workflows.Simple;
 using StringDictionary = Sitecore.Collections.StringDictionary;
 using windows = Sitecore.Shell.Framework.Windows;
 
@@ -44,6 +47,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
         /// <summary>Gets or sets the offset(what page we are on).</summary>
         /// <value>The size of the offset.</value>
         private OffsetCollection Offset = new OffsetCollection();
+
 
         /// <summary>The pager.</summary>
         protected Border Pager;
@@ -68,12 +72,6 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             set { Registry.SetInt("/Current_User/Workbox/Page Size", value); }
         }
 
-        public bool ShowMyChangesOnly
-        {
-            get { return Registry.GetBool("/Current_User/Workbox/JustMyChanges"); }
-            set { Registry.SetBool("/Current_User/Workbox/JustMyChanges", value); }
-        }
-
         /// <summary>
         /// Gets a value indicating whether page is reloads by reload button on the ribbon.
         /// </summary>
@@ -83,21 +81,14 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             get { return new UrlString(WebUtil.GetRawUrl())["reload"] == "1"; }
         }
 
-        /// <summary>Comments the specified args.</summary>
-        /// <param name="args">The arguments.</param>
         public void Comment(ClientPipelineArgs args)
         {
             Assert.ArgumentNotNull((object)args, "args");
             ID result1 = ID.Null;
             if (Context.ClientPage.ServerProperties["command"] != null)
                 ID.TryParse(Context.ClientPage.ServerProperties["command"] as string, out result1);
-            ItemUri itemUri = new ItemUri((Context.ClientPage.ServerProperties["id"] ??
-                                           (object)string.Empty).ToString(),
-                Language.Parse(Context.ClientPage.ServerProperties["language"] as string),
-                global::Sitecore.Data.Version.Parse(Context.ClientPage.ServerProperties["version"] as string),
-                Context.ContentDatabase);
-            bool flag = args.Parameters["ui"] != null && args.Parameters["ui"] == "1" ||
-                        args.Parameters["suppresscomment"] != null && args.Parameters["suppresscomment"] == "1";
+            ItemUri itemUri = new ItemUri((Context.ClientPage.ServerProperties["id"] ?? (object)string.Empty).ToString(), Language.Parse(Context.ClientPage.ServerProperties["language"] as string), Sitecore.Data.Version.Parse(Context.ClientPage.ServerProperties["version"] as string), Context.ContentDatabase);
+            bool flag = args.Parameters["ui"] != null && args.Parameters["ui"] == "1" || args.Parameters["suppresscomment"] != null && args.Parameters["suppresscomment"] == "1";
             if (!args.IsPostBack && result1 != (ID)null && !flag)
             {
                 WorkflowUIHelper.DisplayCommentDialog(itemUri, result1);
@@ -105,58 +96,42 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             }
             else if (args.Result != null && args.Result.Length > 2000)
             {
-                Context.ClientPage.ClientResponse.ShowError(
-                    new Exception(
-                        string.Format(
-                            "The comment is too long.\n\nYou have entered {0} characters.\nA comment cannot contain more than 2000 characters.",
-                            (object)args.Result.Length)));
+                Context.ClientPage.ClientResponse.ShowError(new Exception(string.Format("The comment is too long.\n\nYou have entered {0} characters.\nA comment cannot contain more than 2000 characters.", (object)args.Result.Length)));
                 WorkflowUIHelper.DisplayCommentDialog(itemUri, result1);
                 args.WaitForPostBack();
             }
             else
             {
-                if ((args.Result == null || !(args.Result != "null") ||
-                     (!(args.Result != "undefined") || !(args.Result != "cancel"))) && !flag)
+                if ((args.Result == null || !(args.Result != "null") || (!(args.Result != "undefined") || !(args.Result != "cancel"))) && !flag)
                     return;
                 string result2 = args.Result;
-                StringDictionary commentFields = string.IsNullOrEmpty(result2)
-                    ? new StringDictionary()
-                    : WorkflowUIHelper.ExtractFieldsFromFieldEditor(result2);
+                Sitecore.Collections.StringDictionary commentFields = string.IsNullOrEmpty(result2) ? new Sitecore.Collections.StringDictionary() : WorkflowUIHelper.ExtractFieldsFromFieldEditor(result2);
                 try
                 {
-                    IWorkflowProvider workflowProvider = Context.ContentDatabase.WorkflowProvider;
-                    if (workflowProvider == null)
-                        return;
-                    IWorkflow workflow =
-                        workflowProvider.GetWorkflow(Context.ClientPage.ServerProperties["workflowid"] as string);
-                    if (workflow == null)
+                    IWorkflow workflowFromPage = this.GetWorkflowFromPage();
+                    if (workflowFromPage == null)
                         return;
                     Item obj = Database.GetItem(itemUri);
                     if (obj == null)
                         return;
-                    string currentPanelWorkFlowId = obj.State.GetWorkflowState().StateID;
-                    WorkflowUIHelper.ExecuteCommand(obj, workflow,
-                        Context.ClientPage.ServerProperties["command"] as string, commentFields, (System.Action)(() =>
-                        {
-                            int itemCount = workflow.GetItemCount(currentPanelWorkFlowId);
-                            if (this.PageSize > 0 && itemCount % this.PageSize == 0)
-                                this.Offset[currentPanelWorkFlowId] = itemCount / this.PageSize <= 1
-                                    ? 0
-                                    : this.Offset[currentPanelWorkFlowId] - 1;
-                            this.Refresh(
-                                ((IEnumerable<WorkflowState>)workflow.GetStates())
-                                    .ToDictionary<WorkflowState, string, string>(
-                                        (Func<WorkflowState, string>)(state => state.StateID),
-                                        (Func<WorkflowState, string>)(state => this.Offset[state.StateID].ToString())));
-                        }));
+                    Processor completionCallback = new Processor("Workflow complete state item count", (object)this, "WorkflowCompleteStateItemCount");
+                    WorkflowUIHelper.ExecuteCommand(obj, workflowFromPage, Context.ClientPage.ServerProperties["command"] as string, commentFields, completionCallback);
                 }
-                catch (WorkflowStateMissingException)
+                catch (WorkflowStateMissingException ex)
                 {
-                    SheerResponse.Alert(
-                        "One or more items could not be processed because their workflow state does not specify the next step.");
+                    SheerResponse.Alert("One or more items could not be processed because their workflow state does not specify the next step.");
                 }
             }
         }
+
+        private IWorkflow GetWorkflowFromPage()
+        {
+            IWorkflowProvider workflowProvider = Context.ContentDatabase.WorkflowProvider;
+            if (workflowProvider == null)
+                return (IWorkflow)null;
+            return workflowProvider.GetWorkflow(Context.ClientPage.ServerProperties["workflowid"] as string);
+        }
+
 
         /// <summary>Handles the message.</summary>
         /// <param name="message">The message.</param>
@@ -233,6 +208,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             urlString.Append("wb", "1");
             Context.ClientPage.ClientResponse.ShowModalDialog(urlString.ToString());
         }
+        
 
         /// <summary>Displays the state.</summary>
         /// <param name="workflow">The workflow.</param>
@@ -917,14 +893,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             Assert.ArgumentNotNull((object)workflow, "workflow");
             ArrayList arrayList = new ArrayList();
 
-            var userName = User.Current.Name;
-            var showMyChangesOnly = ShowMyChangesOnly;
-
-            DataUri[] items = workflow.GetItems(state.StateID)
-                .Where(
-                    item =>
-                        (showMyChangesOnly && Context.ContentDatabase.Items[item].Statistics.UpdatedBy.Contains(userName)) ||
-                        (!showMyChangesOnly)).ToArray();
+            DataUri[] items = workflow.GetItems(state.StateID);
 
             if (items != null)
             {
@@ -948,7 +917,6 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             var result = items.Where(x => repository.IsWorxboxItem(state, x));
             return result.ToArray();
         }
-
 
         /// <summary>Gets the pane ID.</summary>
         /// <param name="workflow">The workflow.</param>
@@ -1070,8 +1038,8 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 {
                     try
                     {
-                        WorkflowUIHelper.ExecuteCommand(obj, workflow, message["command"], (StringDictionary)null,
-                            (System.Action)(() => this.Refresh()));
+                        var completionCallback = new Processor("Workflow complete refresh", (object)this, "WorkflowCompleteRefresh");
+                        WorkflowUIHelper.ExecuteCommand(obj, workflow, message["command"], (Sitecore.Collections.StringDictionary)null, completionCallback);
                     }
                     catch (WorkflowStateMissingException)
                     {
@@ -1083,6 +1051,15 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 return;
             SheerResponse.Alert(
                 "One or more items could not be processed because their workflow state does not specify the next step.");
+        }
+
+
+        /// <summary>Workflow callback to refresh the UI.</summary>
+        /// <param name="args">The args for the workflow execution.</param>
+        [UsedImplicitly]
+        private void WorkflowCompleteRefresh(WorkflowPipelineArgs args)
+        {
+            this.Refresh();
         }
 
         /// <summary>Sends the selected.</summary>
