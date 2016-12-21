@@ -4,7 +4,11 @@ This is a workbox replacement for Sitecore 8.1. Future releases will include sup
 
 The goal of Worxbox is to provide content authors and approvers with the ability to submit compositions of work based on Page templates and their references (through links from Page template fields and through Presentation references).
 
-In a future version Worxbox will provide an extensible filtering mechanism that enables filtering workbox.
+In a future version Worxbox will provide an extensible filtering mechanism that enables filtering workbox.  
+
+## Versions  
+
+Sitecore 8.1 - http://bit.ly/2hrSyLN
 
 ## Limitations
 
