@@ -107,7 +107,8 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 if ((args.Result == null || !(args.Result != "null") || (!(args.Result != "undefined") || !(args.Result != "cancel"))) && !flag)
                     return;
                 string result2 = args.Result;
-                Sitecore.Collections.StringDictionary commentFields = string.IsNullOrEmpty(result2) ? new Sitecore.Collections.StringDictionary() : WorkflowUIHelper.ExtractFieldsFromFieldEditor(result2);
+                Sitecore.Collections.StringDictionary commentFields = string.IsNullOrEmpty(result2) ? new Sitecore.Collections.StringDictionary() : 
+                    WorkflowUIHelper.ExtractFieldsFromFieldEditor(result2);
                 try
                 {
                     IWorkflow workflowFromPage = this.GetWorkflowFromPage();
@@ -116,7 +117,24 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                     Item obj = Database.GetItem(itemUri);
                     if (obj == null)
                         return;
-                    Processor completionCallback = new Processor("Workflow complete state item count", (object)this, "WorkflowCompleteStateItemCount");
+
+                    var repository = new WorxboxItemsRepository(workflowFromPage);
+                    var compositeStates = repository.GetWorxboxWorkflowStates(workflowFromPage);
+                    var workflowState = workflowFromPage.GetState(obj);
+
+                    var completionCallback = new Processor("Workflow complete state item count", (object)this, "ChildWorkflowComplete");
+
+                    if (repository.IsWorxboxItem(workflowState, new DataUri(obj.Uri)))
+                    {
+                        var compositeItems =
+                            repository.GetWorxboxItems(
+                                compositeStates.First(x => x.WorkflowState.StateID.Equals(workflowState.StateID)), obj);
+                        foreach (var compositeItem in compositeItems)
+                        {
+                            WorkflowUIHelper.ExecuteCommand(compositeItem, workflowFromPage, Context.ClientPage.ServerProperties["command"] as string, commentFields, completionCallback);
+                        }
+                    }
+                    completionCallback = new Processor("Workflow complete state item count", (object)this, "WorkflowCompleteStateItemCount");
                     WorkflowUIHelper.ExecuteCommand(obj, workflowFromPage, Context.ClientPage.ServerProperties["command"] as string, commentFields, completionCallback);
                 }
                 catch (WorkflowStateMissingException ex)
@@ -124,6 +142,23 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                     SheerResponse.Alert("One or more items could not be processed because their workflow state does not specify the next step.");
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Workflow completion callback to refresh the counts of items in workflow states.
+        /// </summary>
+        /// <param name="args">The arguments for the workflow execution.</param>
+        [UsedImplicitly]
+        private void WorkflowCompleteStateItemCount(WorkflowPipelineArgs args)
+        {
+            IWorkflow workflowFromPage = this.GetWorkflowFromPage();
+            if (workflowFromPage == null)
+                return;
+            int itemCount = workflowFromPage.GetItemCount(args.PreviousState.StateID);
+            if (this.PageSize > 0 && itemCount % this.PageSize == 0)
+                this.Offset[args.PreviousState.StateID] = itemCount / this.PageSize <= 1 ? 0 : this.Offset[args.PreviousState.StateID] - 1;
+            this.Refresh(((IEnumerable<WorkflowState>)workflowFromPage.GetStates()).ToDictionary<WorkflowState, string, string>((Func<WorkflowState, string>)(state => state.StateID), (Func<WorkflowState, string>)(state => this.Offset[state.StateID].ToString())));
         }
 
         private IWorkflow GetWorkflowFromPage()
@@ -346,9 +381,11 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
 
             var workflowStates = workflow.GetStates();
             var repository = new WorxboxItemsRepository(workflow);
-            var compositeStates = new List<WorxboxWorkflowState>();
-            var actions = repository.GetWorkflowCommands();
+            // TODO:  Refactor to repository method
+            var compositeStates = repository.GetWorxboxWorkflowStates(workflow);
 
+            //var actions = repository.GetWorkflowCommands();
+            /*
             foreach (var state in workflowStates)
             {
                 var compositeState = new List<WorkflowCommand>();
@@ -373,7 +410,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                     });
                 }
             }
-
+            */
             foreach (var state in compositeStates)
             {
                 DataUri[] items = this.GetWorxboxItems(state.WorkflowState, workflow);
@@ -1025,14 +1062,10 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             WorkflowState state = workflow.GetState(stateID);
             DataUri[] items = this.GetItems(state, workflow);
             Assert.IsNotNull((object)items, "uris is null");
-            ////if (state == null)
-            ////{
-            ////    string str = string.Empty;
-            ////}
-            ////else
-            ////{
-            ////    string displayName = state.DisplayName;
-            ////}
+            
+            var repository = new WorxboxItemsRepository(workflow);
+            var compositeStates = new List<WorxboxWorkflowState>();
+
             bool flag = false;
             foreach (DataUri index in items)
             {
@@ -1041,7 +1074,18 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 {
                     try
                     {
-                        var completionCallback = new Processor("Workflow complete refresh", (object)this, "WorkflowCompleteRefresh");
+                        var completionCallback = new Processor("Workflow complete refresh", (object)this, "ChildWorkflowComplete");
+                        if (repository.IsWorxboxItem(state, index) && compositeStates.Any(x=> x.WorkflowState.StateID.Equals(stateID)))
+                        {
+                            var additionalItems =
+                                repository.GetWorxboxItems(
+                                    compositeStates.First(x => x.WorkflowState.StateID.Equals(stateID)), obj);
+                            foreach (var compositeItem in additionalItems)
+                            {
+                                WorkflowUIHelper.ExecuteCommand(compositeItem, workflow, message["command"], (Sitecore.Collections.StringDictionary)null, completionCallback);
+                            }
+                        }
+                        completionCallback = new Processor("Workflow complete refresh", (object)this, "WorkflowCompleteRefresh");
                         WorkflowUIHelper.ExecuteCommand(obj, workflow, message["command"], (Sitecore.Collections.StringDictionary)null, completionCallback);
                     }
                     catch (WorkflowStateMissingException)
@@ -1056,6 +1100,11 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 "One or more items could not be processed because their workflow state does not specify the next step.");
         }
 
+        [UsedImplicitly]
+        private void ChildWorkflowComplete(WorkflowPipelineArgs args)
+        {
+            // NOP
+        }
 
         /// <summary>Workflow callback to refresh the UI.</summary>
         /// <param name="args">The args for the workflow execution.</param>
@@ -1080,6 +1129,10 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 return;
             int num = 0;
             bool flag = false;
+
+            var repository = new WorxboxItemsRepository(workflow);
+            var compositeStates = repository.GetWorxboxWorkflowStates(workflow);
+
             foreach (string key in Context.ClientPage.ClientRequest.Form.Keys)
             {
                 if (key != null && key.StartsWith("check_", StringComparison.InvariantCulture))
@@ -1095,6 +1148,17 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                         {
                             try
                             {
+                                if (repository.IsWorxboxItem(state, new DataUri(obj.Uri)))
+                                {
+                                    var compositeItems =
+                                        repository.GetWorxboxItems(
+                                            compositeStates.First(x => x.WorkflowState.StateID.Equals(state.StateID)),
+                                                obj);
+                                    foreach (var compositeItem in compositeItems)
+                                    {
+                                        workflow.Execute(message["command"], compositeItem, state.DisplayName, true);
+                                    }
+                                }
                                 workflow.Execute(message["command"], obj, state.DisplayName, true);
                             }
                             catch (WorkflowStateMissingException)

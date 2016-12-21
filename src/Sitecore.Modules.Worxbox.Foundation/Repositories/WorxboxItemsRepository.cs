@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using CapTech.Modules.Worxbox.Foundation.Models;
 using Sitecore;
@@ -89,6 +90,28 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
         {
             var items = ((MultilistField) _settings.Fields[WorkflowCommandsFieldId]).GetItems();
             return items;
+        }
+
+        public IEnumerable<WorxboxWorkflowState> GetWorxboxWorkflowStates(IWorkflow workflow)
+        {
+            var worxBoxCommands = GetWorkflowCommands();
+            foreach (var state in workflow.GetStates())
+            {
+                var commands = from cmd in worxBoxCommands
+                    join wfCmd in workflow.GetCommands(state.StateID).ToList()
+                        on cmd.ID equals ID.Parse(wfCmd.CommandID)
+                    select wfCmd;
+
+                if (commands.Any())
+                {
+                    yield return new WorxboxWorkflowState()
+                    {
+                        Workflow = workflow,
+                        WorkflowState = state,
+                        WorkflowCommands = commands
+                    };
+                }
+            }
         }
 
         public IEnumerable<ID> GetWorkflowCommandIDs()
