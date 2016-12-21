@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using CapTech.Modules.Worxbox.Foundation.Models;
@@ -27,26 +28,61 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
             _settings = Client.ContentDatabase.GetItem(WorxboxSettingsId);
         }
 
-        public IEnumerable<Item> GetWorxboxItems(WorxboxWorkflowState state, Item item)
+        private IEnumerable<Item> GetWorxboxItems(WorxboxWorkflowState state, Item item, List<ID> visitedItems)
         {
             var referencedItems = Globals.LinkDatabase.GetReferences(item);
             var results = new List<Item>();
-            foreach(var reference in referencedItems)
+            foreach (var reference in referencedItems)
             {
                 var refItem = Context.ContentDatabase.GetItem(reference.TargetItemID);
-
-                if (refItem != null && refItem["__Workflow state"].Equals(state.WorkflowState.StateID))
+                if (refItem != null && IsCompositable(state, refItem) && visitedItems.All(x=>x != refItem.ID))
                 {
                     if (!results.Any(
                             x => x.ID == refItem.ID && x.Language == refItem.Language && x.Version == refItem.Version))
                     {
                         results.Add(refItem);
+                        visitedItems.Add(refItem.ID);
+                        results.AddRange(GetParentItems(state, refItem, visitedItems));
+                        results.AddRange(GetChildItems(state, refItem, visitedItems));
+                        results.AddRange(GetWorxboxItems(state, refItem, visitedItems));
                     }
-                    
                 }
             }
-
             return results;
+        }
+
+        private IEnumerable<Item> GetChildItems(WorxboxWorkflowState state, Item item, List<ID> visitedItems)
+        {
+            var items = item.Axes.GetDescendants();
+            return items.Where(child => IsCompositable(state, child) && visitedItems.All(x => x != child.ID));
+        }
+
+        private IEnumerable<Item> GetParentItems(WorxboxWorkflowState state, Item item, List<ID> visitedItems)
+        {
+            var results = new List<Item>();
+            var parent = item.Parent;
+            while (parent != null && parent.ID != ItemIDs.RootID)
+            {
+                if (IsCompositable(state, parent) &&
+                    visitedItems.All(x => x != parent.ID))
+                {
+                    results.Add(parent);
+                    visitedItems.Add(parent.ID);
+                }
+                parent = parent.Parent;
+            }
+            return results;
+        }
+
+        private bool IsCompositable(WorxboxWorkflowState state, Item item)
+        {
+            return !this.IsWorxboxItem(state.WorkflowState, new DataUri(item.Uri)) &&
+                   item["__Workflow state"].Equals(state.WorkflowState.StateID);
+        }
+
+        public IEnumerable<Item> GetWorxboxItems(WorxboxWorkflowState state, Item item)
+        {
+            return GetWorxboxItems(state, item, new List<ID>());
         }
 
         public IEnumerable<Item> GetWorkflowCommands()

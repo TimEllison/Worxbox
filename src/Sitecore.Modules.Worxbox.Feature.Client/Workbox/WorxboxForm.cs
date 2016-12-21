@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -31,6 +32,7 @@ using Sitecore.Shell.Framework.Commands;
 using Sitecore.Shell.Web.UI.WebControls;
 using Sitecore.Text;
 using Sitecore.Web;
+using Sitecore.Web.UI;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Sheer;
 using Sitecore.Web.UI.WebControls.Ribbons;
@@ -389,8 +391,8 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                             ? (object)string.Format("{0} {1}", (object)length, (object)Translate.Text("items"))
                             : (object)string.Format("1 {0}", (object)Translate.Text("item")))
                         : (object)Translate.Text("None"));
-                section2.Header = "Worxbox " + state.WorkflowState.DisplayName + str2;
-                section2.Icon = state.WorkflowState.Icon;
+                var worxBoxIcon = "/~/icon/worxbox/48x48/worxbox.png";
+                section2.Header = $"<span><img src='{worxBoxIcon}'  style='vertical-align:middle; padding-right: 10px;'/></span></span>Worxbox {state.WorkflowState.DisplayName} {str2}</span>";
                 if (Settings.ClientFeeds.Enabled)
                 {
                     FeedUrlOptions feedUrlOptions = new FeedUrlOptions("/sitecore/shell/~/feed/workflowstate.aspx")
@@ -704,7 +706,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
 
             var childItems = new Literal();
             var builder = new StringBuilder();
-            builder.AppendLine("<div style='margin-left:80px;'>");
+            builder.AppendLine("<div style='margin-left:80px;padding-top:25px;padding-bottom:25px;'>");
             workboxItem.Controls.Add(childItems);
 
             var repository = new WorxboxItemsRepository(workflow);
@@ -717,6 +719,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             }
 
             builder.AppendLine("</div>");
+
             childItems.Text = builder.ToString();
 
             workboxItem["Icon"] = (object)item.Appearance.Icon;
