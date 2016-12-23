@@ -58,6 +58,11 @@
   <ItemGroup>
     <Content Include="sitecore\shell\themes\standard\worxbox.zip" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Config\Include\zWorxBox\CapTech.WorxBox.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(TargetDir)CapTech.Modules.*.dll"  "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\bin"</PostBuildEvent>
