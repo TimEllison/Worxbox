@@ -53,6 +53,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sitecore\shell\Override\FilterForm.aspx" />
     <Content Include="sitecore\shell\Override\Workbox.xml" />
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using CapTech.Modules.Worxbox.Foundation.Filter;
 using CapTech.Modules.Worxbox.Foundation.Models;
 using CapTech.Modules.Worxbox.Foundation.Repositories;
 using Sitecore;
@@ -66,6 +67,8 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
         /// <summary>The _state names.</summary>
         private NameValueCollection stateNames;
 
+        private IItemFilterer _filterer;
+
         /// <summary>Gets or sets the size of the page.</summary>
         /// <value>The size of the page.</value>
         public int PageSize
@@ -81,6 +84,11 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
         protected virtual bool IsReload
         {
             get { return new UrlString(WebUtil.GetRawUrl())["reload"] == "1"; }
+        }
+
+        public WorxboxForm()
+        {
+            _filterer = new WorxBoxItemFilterer();
         }
 
         public void Comment(ClientPipelineArgs args)
@@ -946,8 +954,8 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                         arrayList.Add((object)index);
                 }
             }
-
-            return arrayList.ToArray(typeof(DataUri)) as DataUri[];
+            var result = _filterer.FilterItems(arrayList.ToArray(typeof(DataUri)) as DataUri[]);
+            return result.ToArray();
         }
 
         private DataUri[] GetWorxboxItems(WorkflowState state, IWorkflow workflow)
@@ -955,7 +963,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             var  repository = new WorxboxItemsRepository(workflow);
             var items = GetItems(state, workflow);
             var result = items.Where(x => repository.IsWorxboxItem(state, x));
-            return result.ToArray();
+            return _filterer.FilterItems(result).ToArray();
         }
 
         /// <summary>Gets the pane ID.</summary>
@@ -1208,6 +1216,16 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 }
                 this.WireUpNavigators(control1);
             }
+        }
+
+        protected void SetFilter()
+        {
+            _filterer.SetFilter();
+        }
+
+        protected void ClearFilter()
+        {
+            _filterer.ClearFilter();
         }
 
         private class OffsetCollection

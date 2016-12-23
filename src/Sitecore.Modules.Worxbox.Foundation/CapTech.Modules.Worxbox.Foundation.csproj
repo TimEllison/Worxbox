@@ -82,6 +82,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Workflow.cs" />
+    <Compile Include="Filter\IItemFilterer.cs" />
+    <Compile Include="Filter\WorxBoxItemFilterer.cs" />
+    <Compile Include="Models\Operator.cs" />
+    <Compile Include="Models\WorxboxFieldFilter.cs" />
     <Compile Include="Repositories\WorxboxItemsRepository.cs" />
     <Compile Include="Models\WorxboxWorkflowState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,9 +93,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filter\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
