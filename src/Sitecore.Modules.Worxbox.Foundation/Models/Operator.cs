@@ -10,8 +10,6 @@ namespace CapTech.Modules.Worxbox.Foundation.Models
     {
         Equals,
         NotEqual,
-        GreaterThan,
-        LessThan,
         StartsWith,
         EndsWith,
         Contains

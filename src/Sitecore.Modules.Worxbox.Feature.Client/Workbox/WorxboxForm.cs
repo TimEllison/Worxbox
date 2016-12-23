@@ -1221,11 +1221,13 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
         protected void SetFilter()
         {
             _filterer.SetFilter();
+            Refresh(null);
         }
 
         protected void ClearFilter()
         {
             _filterer.ClearFilter();
+            Refresh(null);
         }
 
         private class OffsetCollection

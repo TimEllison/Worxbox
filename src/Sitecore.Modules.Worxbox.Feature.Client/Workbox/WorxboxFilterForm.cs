@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CapTech.Modules.Worxbox.Foundation.Models;
 using CapTech.Modules.Worxbox.Foundation.Repositories;
 using Newtonsoft.Json;
 using Sitecore.Diagnostics;
@@ -36,6 +37,21 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull((object)args, "args");
+
+            var filter = new List<WorxboxFieldFilter>
+            {
+                new WorxboxFieldFilter
+                {
+                    Field = new WorxboxFilterField
+                    {
+                        FriendlyName = "Updated By",
+                        FieldName = "__Updated by"
+                    },
+                    Operator = Operator.Equals,
+                    Value = "sitecore\tim"
+                }
+            };
+            Registry.SetString("/Current_User/Workbox/FieldFilter", JsonConvert.SerializeObject(filter));
             SheerResponse.CloseWindow();
         }
     }

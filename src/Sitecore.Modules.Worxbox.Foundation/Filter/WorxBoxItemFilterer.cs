@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapTech.Modules.Worxbox.Foundation.Repositories;
+using CapTech.Modules.Worxbox.Foundation.Models;
+using Newtonsoft.Json;
+using NVelocity.Runtime.Directive;
 using Sitecore;
 using Sitecore.Data;
-using Sitecore.Globalization;
-using Sitecore.Shell.Web.UI.WebControls;
 using Sitecore.Text;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Sheer;
-using Sitecore.Workflows;
 
 namespace CapTech.Modules.Worxbox.Foundation.Filter
 {
@@ -19,14 +16,59 @@ namespace CapTech.Modules.Worxbox.Foundation.Filter
     {
         public IEnumerable<DataUri> FilterItems(IEnumerable<DataUri> itemList)
         {
-            return itemList;
+            var fieldFilter = Registry.GetString("/Current_User/Workbox/FieldFilter");
+            if (string.IsNullOrEmpty(fieldFilter))
+            {
+                return itemList;
+            }
+
+            var filterList = JsonConvert.DeserializeObject<List<WorxboxFieldFilter>>(fieldFilter);
+            var items = itemList.Select(x => Client.ContentDatabase.GetItem(x.ItemID, x.Language, x.Version));
+
+            var result = new List<DataUri>();
+
+            // Initial behavior is AND condition.
+            foreach (var item in items)
+            {
+                var include = true;
+                foreach (var filter in filterList)
+                {
+                    var filterInclude = false;
+                    switch (filter.Operator)
+                    {
+                        case Operator.Contains:
+                            filterInclude = item[filter.Field.FieldName].Contains(filter.Value);
+                            break;
+                        case Operator.EndsWith:
+                            filterInclude = item[filter.Field.FieldName].EndsWith(filter.Value);
+                            break;
+                        case Operator.Equals:
+                            filterInclude = item[filter.Field.FieldName].Equals(filter.Value);
+                            break;
+                        case Operator.NotEqual:
+                            filterInclude = !item[filter.Field.FieldName].Equals(filter.Value);
+                            break;
+                        case Operator.StartsWith:
+                            filterInclude = item[filter.Field.FieldName].StartsWith(filter.Value);
+                            break;
+                        default:
+                            break;
+                    }
+                    include = include && filterInclude;
+                }
+                if (include)
+                {
+                    result.Add(new DataUri(item.ID, item.Language, item.Version));
+                }
+            }
+            return result;
         }
 
-        public ClientCommand SetFilter()
+        public void SetFilter()
         {
             var args = new ClientPipelineArgs();
             var urlString = new UrlString(UIUtil.GetUri("control:FilterForm"));
-            var command = Context.ClientPage.ClientResponse.ShowModalDialog(new ModalDialogOptions(urlString.ToString())
+            Context.ClientPage.ClientResponse.ShowModalDialog(new ModalDialogOptions(urlString.ToString())
             {
                 AutoIncreaseHeight = true,
                 Closable = true,
@@ -34,14 +76,13 @@ namespace CapTech.Modules.Worxbox.Foundation.Filter
                 Height = "480px",
                 Width = "720px"
             });
-            
             args.WaitForPostBack();
-            return command;
+            return;
         }
 
         public void ClearFilter()
         {
-            
+            Registry.SetString("/Current_User/Workbox/FieldFilter", String.Empty);
         }
     }
 }

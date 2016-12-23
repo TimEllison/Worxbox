@@ -11,7 +11,7 @@ namespace CapTech.Modules.Worxbox.Foundation.Filter
     public interface IItemFilterer
     {
         IEnumerable<DataUri> FilterItems(IEnumerable<DataUri> itemList);
-        ClientCommand SetFilter();
+        void SetFilter();
         void ClearFilter();
     }
 }
