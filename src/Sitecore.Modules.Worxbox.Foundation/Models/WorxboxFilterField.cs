@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace CapTech.Modules.Worxbox.Foundation.Models
 {
-    public class WorxboxFieldFilter
+    public class WorxboxFilterField
     {
-        public WorxboxFilterField Field { get; set; }
-        public Operator Operator { get; set; }
-        public string Value { get; set; }
+        public string FieldName { get; set; }
+        public string FriendlyName { get; set; }
     }
 }

@@ -86,9 +86,12 @@
     <Compile Include="Filter\WorxBoxItemFilterer.cs" />
     <Compile Include="Models\Operator.cs" />
     <Compile Include="Models\WorxboxFieldFilter.cs" />
+    <Compile Include="Models\WorxboxFilterField.cs" />
+    <Compile Include="Repositories\WorxboxFieldFilterRepository.cs" />
     <Compile Include="Repositories\WorxboxItemsRepository.cs" />
     <Compile Include="Models\WorxboxWorkflowState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\WorxboxSettingsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

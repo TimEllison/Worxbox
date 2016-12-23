@@ -53,7 +53,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sitecore\shell\Override\FilterForm.aspx" />
+    <Content Include="sitecore modules\shell\Worxbox\FilterForm.xml" />
     <Content Include="sitecore\shell\Override\Workbox.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -64,9 +64,13 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(TargetDir)CapTech.Modules.*.dll"  "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\bin"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y "$(TargetDir)CapTech.Modules.*.dll"  "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\bin"
+xcopy /Y /S "$(ProjectDir)\sitecore\shell\*.*" "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\sitecore\shell"
+xcopy /Y /S "$(ProjectDir)\sitecore modules\*.*" "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\sitecore modules"
+xcopy /Y /S "$(ProjectDir)\App_config\*.*" "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\app_config"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
