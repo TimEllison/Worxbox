@@ -1,0 +1,59 @@
+----item----
+version: 1
+id: {6E585B70-967F-4F58-9609-3842BC094432}
+database: master
+path: /sitecore/system/Settings/Rules/Definitions/Elements/WorxBox/Tags/Default
+parent: {01E690D4-A0B9-4440-AD0F-4598804C2C35}
+name: Default
+master: {9A72C539-DBF8-4DAD-96D3-A298FC04ADD6}
+template: {854BA861-63EA-4A0C-8C7B-541E9A7EC4C1}
+templatekey: Tags Definition
+created: 20170103T023213:636190075337700000
+
+----field----
+field: {42F77151-098F-496A-94CF-590B7EDEEABE}
+name: Tags
+key: tags
+content-length: 38
+
+{0787C576-FEE7-4197-B604-68FF45DB4A07}
+----field----
+field: {F6D8A61C-2F84-4401-BD24-52D2068172BC}
+name: __Originator
+key: __originator
+content-length: 38
+
+{6F0688E4-7B16-482F-845B-35836FD15D14}
+----version----
+language: en
+version: 1
+revision: 6f6019fd-fe25-4616-9161-051e6a9fca30
+
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 16
+
+20170103T023213Z
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+6f6019fd-fe25-4616-9161-051e6a9fca30
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 16
+
+20170103T025128Z
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin

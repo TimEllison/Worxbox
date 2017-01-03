@@ -138,5 +138,5 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
             var itemIsWorkboxTemplate = GetWorxboxTemplateIDs().Contains(contentItem.TemplateID);
             return stateHasCommands && itemIsWorkboxTemplate;
         }
-    }
+     }
 }

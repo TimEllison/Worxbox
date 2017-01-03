@@ -43,6 +43,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CapTech.Modules.WorxBox.Feature.Rules\CapTech.Modules.WorxBox.Feature.Rules.csproj">
+      <Project>{fea6585d-6278-4afb-8492-1d72cf48c153}</Project>
+      <Name>CapTech.Modules.WorxBox.Feature.Rules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sitecore.Modules.Worxbox.Feature.Client\CapTech.Modules.Worxbox.Feature.Client.csproj">
       <Project>{784c4f3e-8c12-4fe1-ba71-fecaf2881959}</Project>
       <Name>CapTech.Modules.Worxbox.Feature.Client</Name>
@@ -53,6 +57,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sitecore modules\shell\Worxbox\FilterForm.xaml.xml" />
+    <Content Include="sitecore modules\shell\Worxbox\RulesEditor.css" />
+    <Content Include="sitecore modules\shell\Worxbox\RulesEditor.js" />
     <Content Include="sitecore\shell\Override\Workbox.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +70,13 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(TargetDir)CapTech.Modules.*.dll"  "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\bin"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y "$(TargetDir)CapTech.Modules.*.dll"  "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\bin"
+xcopy /Y /S "$(ProjectDir)\sitecore\shell\*.*" "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\sitecore\shell"
+xcopy /Y /S "$(ProjectDir)\sitecore modules\*.*" "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\sitecore modules"
+xcopy /Y /S "$(ProjectDir)\App_config\*.*" "E:\RulesDemo\Sitecore 8.1 rev. 160519\Website\app_config"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
