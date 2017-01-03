@@ -4,7 +4,8 @@ This is a workbox replacement for Sitecore 8.1. Future releases will include sup
 
 The goal of Worxbox is to provide content authors and approvers with the ability to submit compositions of work based on Page templates and their references (through links from Page template fields and through Presentation references).
 
-In a future version Worxbox will provide an extensible filtering mechanism that enables filtering workbox.  
+The updated release now provides users with the ability to create a custom rule set for filtering Workbox.  This rule set is based on the Sitecore Rules Engine and ships with 2 rules that allow users to show just their creations and/or
+just their changes.  The current release only supports one set of rules per user.  Changing the filtering is as easy as using the default Sitecore Rules Editor.  
 
 ## Versions  
 
