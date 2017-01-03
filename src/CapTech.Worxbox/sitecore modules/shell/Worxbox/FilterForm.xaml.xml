@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xamlControls 
+  xmlns:x="http://www.sitecore.net/xaml"
+  xmlns:ajax="http://www.sitecore.net/ajax"
+  xmlns:rest="http://www.sitecore.net/rest"
+  xmlns:r="http://www.sitecore.net/renderings"
+  xmlns:xmlcontrol="http://www.sitecore.net/xmlcontrols"
+  xmlns:p="http://schemas.sitecore.net/Visual-Studio-Intellisense"
+  xmlns:asp="http://www.sitecore.net/microsoft/webcontrols"
+  xmlns:html="http://www.sitecore.net/microsoft/htmlcontrols"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+  <CapTech.WorxBox.FilterForm x:inherits="CapTech.Modules.Worxbox.Feature.Client.Workbox.WorxboxFilterForm, CapTech.Modules.Worxbox.Feature.Client">
+
+    <Sitecore.Controls.DialogPage runat="server" Header="WorxBox Filter Editor" Text="Select the conditions for your rule first. Then, specify the values in the Rule Description field.">
+      <AjaxScriptManager runat="server" />
+      <ContinuationManager runat="server" />
+
+      <Script Src="/sitecore/shell/controls/lib/scriptaculous/scriptaculous.js" type="text/javascript" runat="server" />
+      <Script Src="/sitecore/shell/controls/lib/scriptaculous/dragdrop.js" type="text/javascript" runat="server" />
+      <Script Src="/sitecore/shell/applications/Rules/RulesEditor/RulesEditor.js" type="text/javascript" runat="server" />
+      <Stylesheet Src="/sitecore/shell/Applications/Rules/RulesEditor/RulesEditor.css" runat="server"/>
+      <input type="hidden" id="RuleId" name="RuleId" value="" />
+
+      <div class="scMainContainer" id="MainPanel" runat="server">
+        <div class="scConditionsAndActions">
+          <div class="scConditions" id="ConditionPanel" runat="server">
+            <Literal class="scFieldLabel selectConditions" runat="server" Text="Select the conditions for the rule:" />
+            <Edit id="ConditionFilter" Placeholder="Search for a condition" onfocus="javascript:scFocus(this,event)" onblur="javascript:scBlur(this,event)" onkeyup="javascript:scFilterConditions(this,event)" oncut="javascript:scFilterConditions(this,event)" onpaste="javascript:scFilterConditions(this,event)" runat="server" />
+            <Scrollbox ID="Conditions" class="scScrollbox scInsetBorder" runat="server"/>
+          </div>
+          <div class="scActions" ID="ActionPanel" runat="server">
+            <Literal class="scFieldLabel selectActions" runat="server" Text="Select the actions for the rule:" />
+            <Edit id="ActionFilter" Placeholder="Search for an action" onfocus="javascript:scFocus(this,event)" onblur="javascript:scBlur(this,event)" onkeyup="javascript:scFilterActions(this,event)" oncut="javascript:scFilterActions(this,event)" onpaste="javascript:scFilterActions(this,event)" runat="server"/>
+            <Scrollbox ID="Actions" class="scScrollbox scInsetBorder" runat="server" />
+          </div>
+        </div>
+        <div class="scRuleDescription">
+          <Literal class="scFieldLabel scDescriptionLabel" ID="RuleDescriptionLiteral" runat="server" Text="Rule description (click an underlined value to edit it):" />
+          <Scrollbox class="scScrollbox scInsetBorder scDescription" ID="Description" runat="server" />
+        </div>
+      </div>
+      <div class="scFinalCountContainer" ID="FinalCountPanel" runat="server">
+        <Literal class="scFieldLabel" ID="FinalCountLiteral" runat="server" Text="" />
+      </div>
+    </Sitecore.Controls.DialogPage>
+
+  </CapTech.WorxBox.FilterForm>
+</xamlControls>

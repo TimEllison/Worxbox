@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Worxbox", "CapTech.Worxbox\CapTech.Worxbox.csproj", "{DB83E8D2-49CA-4E10-BF5A-CD86F54DC2DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.WorxBox.Feature.Rules", "CapTech.Modules.WorxBox.Feature.Rules\CapTech.Modules.WorxBox.Feature.Rules.csproj", "{FEA6585D-6278-4AFB-8492-1D72CF48C153}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{DB83E8D2-49CA-4E10-BF5A-CD86F54DC2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB83E8D2-49CA-4E10-BF5A-CD86F54DC2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB83E8D2-49CA-4E10-BF5A-CD86F54DC2DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA6585D-6278-4AFB-8492-1D72CF48C153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA6585D-6278-4AFB-8492-1D72CF48C153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA6585D-6278-4AFB-8492-1D72CF48C153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA6585D-6278-4AFB-8492-1D72CF48C153}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,69 +1,62 @@
 ----item----
 version: 1
-id: {485DDE16-6707-4A70-8223-EE89AFCE4253}
+id: {0787C576-FEE7-4197-B604-68FF45DB4A07}
 database: master
-path: /sitecore/system/Settings/Rules/WorxBox/Tags/Default
-parent: {3DCD24C7-DBBB-4F85-964F-9107E4B6F9A7}
-name: Default
-master: {BDC41FDD-A3AC-4B69-A0BA-471C425CB083}
-template: {854BA861-63EA-4A0C-8C7B-541E9A7EC4C1}
-templatekey: Tags Definition
-created: 20170102T141113:636189630735430000
+path: /sitecore/system/Settings/Rules/Definitions/Tags/WorxBox
+parent: {DADB4F93-477F-491F-A905-C4005C452E67}
+name: WorxBox
+master: {60E3E35B-CEF9-4AFA-9F89-204ED015CCB9}
+template: {1A9B6300-4652-477C-A4B5-B2A64E86B29F}
+templatekey: Tag
+created: 20170103T025032:636190086325770000
 
-----field----
-field: {42F77151-098F-496A-94CF-590B7EDEEABE}
-name: Tags
-key: tags
-content-length: 116
-
-{83E58187-D1E5-4FB8-953E-EE89816EC0B5}|{2B6BE5E9-5A0B-425E-8CFF-959D7CC46581}|{0787C576-FEE7-4197-B604-68FF45DB4A07}
 ----field----
 field: {F6D8A61C-2F84-4401-BD24-52D2068172BC}
 name: __Originator
 key: __originator
 content-length: 38
 
-{38069D83-16E5-4533-998A-E9E9E13B508D}
+{0C559214-E3B6-418E-9E1C-8AF7B19FC20B}
 ----version----
 language: en
 version: 1
-revision: 5af940ec-fcf0-41c1-aa26-fb95491e1da9
+revision: 2c3857fd-3293-499e-be9c-066e2a017ac4
 
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
 key: __owner
-content-length: 12
+content-length: 14
 
-sitecore\tim
+sitecore\admin
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
 content-length: 16
 
-20170102T141113Z
+20170103T025033Z
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
 key: __created by
-content-length: 12
+content-length: 14
 
-sitecore\tim
+sitecore\admin
 ----field----
 field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
 name: __Revision
 key: __revision
 content-length: 36
 
-5af940ec-fcf0-41c1-aa26-fb95491e1da9
+2c3857fd-3293-499e-be9c-066e2a017ac4
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 16
 
-20170103T025200Z
+20170103T025033Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

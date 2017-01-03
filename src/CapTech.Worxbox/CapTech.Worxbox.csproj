@@ -43,6 +43,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CapTech.Modules.WorxBox.Feature.Rules\CapTech.Modules.WorxBox.Feature.Rules.csproj">
+      <Project>{fea6585d-6278-4afb-8492-1d72cf48c153}</Project>
+      <Name>CapTech.Modules.WorxBox.Feature.Rules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sitecore.Modules.Worxbox.Feature.Client\CapTech.Modules.Worxbox.Feature.Client.csproj">
       <Project>{784c4f3e-8c12-4fe1-ba71-fecaf2881959}</Project>
       <Name>CapTech.Modules.Worxbox.Feature.Client</Name>
@@ -53,7 +57,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sitecore modules\shell\Worxbox\FilterForm.xml" />
+    <Content Include="sitecore modules\shell\Worxbox\FilterForm.xaml.xml" />
+    <Content Include="sitecore modules\shell\Worxbox\RulesEditor.css" />
+    <Content Include="sitecore modules\shell\Worxbox\RulesEditor.js" />
     <Content Include="sitecore\shell\Override\Workbox.xml" />
   </ItemGroup>
   <ItemGroup>

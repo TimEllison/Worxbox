@@ -50,14 +50,18 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
         {
             var userFilterFolder = Client.ContentDatabase.GetItem(UserFilterFolderId);
             var userFilter = userFilterFolder.GetChildren().ToArray()
-                .FirstOrDefault(x => x["Owner"].Equals(User.Current.LocalName));
+                .FirstOrDefault(x => x["Owner"].Equals(User.Current.Name));
             if (userFilter == null)
             {
                 using (new SecurityDisabler())
                 {
-                    var path = userFilterFolder.Paths.FullPath + $"/{User.Current.LocalName.Replace("\\", "_")}";
+                    var path = userFilterFolder.Paths.FullPath + $"/{User.Current.Name.Replace("\\", "-").Replace(" ","-")}";
+
                     userFilter = Client.ContentDatabase.CreateItemPath(path,
                         new TemplateItem(Client.ContentDatabase.GetItem(UserFilterTemplateId)));
+                    userFilter.Editing.BeginEdit();
+                    userFilter["Owner"] = User.Current.Name;
+                    userFilter.Editing.EndEdit(true, false);
                 }
             }
             return userFilter;

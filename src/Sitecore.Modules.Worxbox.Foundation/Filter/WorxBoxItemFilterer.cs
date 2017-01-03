@@ -96,12 +96,15 @@ namespace CapTech.Modules.Worxbox.Foundation.Filter
             }
             else
             {
-                var rulesValue = args.Result;
-                if (!string.IsNullOrEmpty(rulesValue))
+                if (args.HasResult)
                 {
-                    _repository.SaveUserRule(rulesValue);
-                    Registry.SetBool("/Current_User/Workbox/FieldFilterEnabled", true);
-                    Registry.SetString("/Current_User/Workbox/FieldFilter", _repository.GetUserFilter().ID.ToString());
+                    var rulesValue = args.Result;
+                    if (!string.IsNullOrEmpty(rulesValue))
+                    {
+                        _repository.SaveUserRule(rulesValue);
+                        Registry.SetBool("/Current_User/Workbox/FieldFilterEnabled", true);
+                        Registry.SetString("/Current_User/Workbox/FieldFilter", _repository.GetUserFilter().ID.ToString());
+                    }
                 }
             }
         }
