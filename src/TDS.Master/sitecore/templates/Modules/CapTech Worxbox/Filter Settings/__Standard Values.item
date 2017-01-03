@@ -1,0 +1,74 @@
+----item----
+version: 1
+id: {E9C5C31E-070E-42E4-A35B-649D27CFEC35}
+database: master
+path: /sitecore/templates/Modules/CapTech Worxbox/Filter Settings/__Standard Values
+parent: {9E9BD017-4AD3-464F-A695-9B284A32E457}
+name: __Standard Values
+master: {00000000-0000-0000-0000-000000000000}
+template: {9E9BD017-4AD3-464F-A695-9B284A32E457}
+templatekey: Filter Settings
+created: 20170102T140125:636189624854300000
+
+----version----
+language: en
+version: 1
+revision: 95e7d61b-3257-4761-b0f3-cab746e7852f
+
+----field----
+field: {AB23B7FE-0B4D-4FE6-AF41-6F5A214F75B2}
+name: Filter Rule
+key: filter rule
+content-length: 52
+
+<?xml version="1.0" encoding="utf-16"?>
+<ruleset />
+----field----
+field: {C1B76654-21C1-40BB-8C58-D1BEA94CDFE1}
+name: Owner
+key: owner
+content-length: 0
+
+
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 14
+
+sitecore\admin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 16
+
+20170102T140125Z
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+95e7d61b-3257-4761-b0f3-cab746e7852f
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 16
+
+20170102T144044Z
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin

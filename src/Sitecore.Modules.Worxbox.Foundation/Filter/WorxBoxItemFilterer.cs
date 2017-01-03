@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CapTech.Modules.Worxbox.Foundation.Extensions;
 using CapTech.Modules.Worxbox.Foundation.Models;
+using CapTech.Modules.Worxbox.Foundation.Repositories;
 using Newtonsoft.Json;
 using NVelocity.Runtime.Directive;
 using Sitecore;
+using Sitecore.Configuration;
 using Sitecore.Data;
+using Sitecore.Rules;
+using Sitecore.Shell.Applications.ContentEditor;
+using Sitecore.Shell.Applications.Dialogs.RulesEditor;
+using Sitecore.Shell.Framework.Commands;
 using Sitecore.Text;
+using Sitecore.Web.UI;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Sheer;
 
@@ -14,75 +22,93 @@ namespace CapTech.Modules.Worxbox.Foundation.Filter
 {
     public class WorxBoxItemFilterer : IItemFilterer
     {
+        private readonly WorxboxSettingsRepository _repository;
+
+        public WorxBoxItemFilterer()
+        {
+            _repository = new WorxboxSettingsRepository();
+        }
+
         public IEnumerable<DataUri> FilterItems(IEnumerable<DataUri> itemList)
         {
-            var fieldFilter = Registry.GetString("/Current_User/Workbox/FieldFilter");
-            if (string.IsNullOrEmpty(fieldFilter))
+            var isSet = Registry.GetBool("/Current_User/Workbox/FieldFilterEnabled");
+            var filter = Registry.GetString("/Current_User/Workbox/FieldFilter");
+            var items = new List<DataUri>();
+
+            if (isSet && !string.IsNullOrEmpty(filter))
+            {
+                var filterItem = Client.ContentDatabase.GetItem(ID.Parse(filter));
+                if (filterItem != null)
+                {
+                    var context = new RuleContext();
+                    foreach (var item in itemList)
+                    {
+                        context.Item = Client.ContentDatabase.GetItem(item);
+                        if (filterItem.EvaluateConditions("Filter Rule", context))
+                        {
+                            items.Add(item);
+                        }
+                    }
+                    return items;
+                }
+                else
+                {
+                    return itemList;
+                }
+            }
+            else
             {
                 return itemList;
             }
-
-            var filterList = JsonConvert.DeserializeObject<List<WorxboxFieldFilter>>(fieldFilter);
-            var items = itemList.Select(x => Client.ContentDatabase.GetItem(x.ItemID, x.Language, x.Version));
-
-            var result = new List<DataUri>();
-
-            // Initial behavior is AND condition.
-            foreach (var item in items)
-            {
-                var include = true;
-                foreach (var filter in filterList)
-                {
-                    var filterInclude = false;
-                    switch (filter.Operator)
-                    {
-                        case Operator.Contains:
-                            filterInclude = item[filter.Field.FieldName].Contains(filter.Value);
-                            break;
-                        case Operator.EndsWith:
-                            filterInclude = item[filter.Field.FieldName].EndsWith(filter.Value);
-                            break;
-                        case Operator.Equals:
-                            filterInclude = item[filter.Field.FieldName].Equals(filter.Value);
-                            break;
-                        case Operator.NotEqual:
-                            filterInclude = !item[filter.Field.FieldName].Equals(filter.Value);
-                            break;
-                        case Operator.StartsWith:
-                            filterInclude = item[filter.Field.FieldName].StartsWith(filter.Value);
-                            break;
-                        default:
-                            break;
-                    }
-                    include = include && filterInclude;
-                }
-                if (include)
-                {
-                    result.Add(new DataUri(item.ID, item.Language, item.Version));
-                }
-            }
-            return result;
         }
 
         public void SetFilter()
         {
+            var item = _repository.GetUserFilter();
             var args = new ClientPipelineArgs();
-            var urlString = new UrlString(UIUtil.GetUri("control:FilterForm"));
-            Context.ClientPage.ClientResponse.ShowModalDialog(new ModalDialogOptions(urlString.ToString())
+            args.Parameters["ContextItemId"] = item.ID.ToString();
+            args.Parameters["Value"] = item.Fields["Filter Rule"].Value;
+            args.Parameters["RulesPath"] = "/sitecore/system/Settings/Rules/WorxBox";
+            args.Parameters["UrlPath"] = "/sitecore/shell/~/xaml/CapTech.WorxBox.FilterForm.aspx";
+
+            Context.ClientPage.Start(this, "Run", args);
+        }
+
+        protected void Run(ClientPipelineArgs args)
+        {
+            if (!args.IsPostBack)
             {
-                AutoIncreaseHeight = true,
-                Closable = true,
-                Header = "Filter",
-                Height = "480px",
-                Width = "720px"
-            });
-            args.WaitForPostBack();
-            return;
+                var options = new RulesEditorOptions()
+                {
+                    ContextItemID = args.Parameters["ContextItemId"],
+                    IncludeCommon = true,
+                    HideActions = true,
+                    RulesPath = args.Parameters["RulesPath"],
+                    Value = args.Parameters["Value"]
+                };
+
+                options.AllowMultiple = true;
+                var urlString = options.ToUrlString();
+                urlString.Path = args.Parameters["UrlPath"];
+                urlString["sc_content"] = Client.ContentDatabase.Name;
+                SheerResponse.ShowModalDialog(urlString.ToString(), "1024px", "768px", string.Empty, true);
+                args.WaitForPostBack();
+            }
+            else
+            {
+                var rulesValue = args.Result;
+                if (!string.IsNullOrEmpty(rulesValue))
+                {
+                    _repository.SaveUserRule(rulesValue);
+                    Registry.SetBool("/Current_User/Workbox/FieldFilterEnabled", true);
+                    Registry.SetString("/Current_User/Workbox/FieldFilter", _repository.GetUserFilter().ID.ToString());
+                }
+            }
         }
 
         public void ClearFilter()
         {
-            Registry.SetString("/Current_User/Workbox/FieldFilter", String.Empty);
+            Registry.SetBool("/Current_User/Workbox/FieldFilterEnabled", false);
         }
     }
 }

@@ -1,15 +1,22 @@
 ----item----
 version: 1
-id: {54E3C4CE-0512-4757-BD37-938FE2E211C2}
+id: {C1B76654-21C1-40BB-8C58-D1BEA94CDFE1}
 database: master
-path: /sitecore/templates/Modules/CapTech Worxbox/Worxbox Settings/Field Filtering
-parent: {45B15C0F-7606-4D25-B2D3-AAF1C3D2530D}
-name: Field Filtering
+path: /sitecore/templates/Modules/CapTech Worxbox/Filter Settings/Filter Settings/Owner
+parent: {896A6C43-DAC4-4AAB-AE13-FC02B9D108F1}
+name: Owner
 master: {00000000-0000-0000-0000-000000000000}
-template: {E269FBB5-3750-427A-9149-7AA950B49301}
-templatekey: Template section
-created: 20161223T213500:636181257008330000
+template: {455A3E98-A627-4B40-8035-E683A0331AC7}
+templatekey: Template field
+created: 20170102T143944:636189647845430000
 
+----field----
+field: {AB162CC0-DC80-4ABF-8871-998EE5D7BA32}
+name: Type
+key: type
+content-length: 13
+
+Sitecore User
 ----field----
 field: {BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}
 name: __Sortorder
@@ -20,7 +27,7 @@ content-length: 3
 ----version----
 language: en
 version: 1
-revision: 7262c76b-60c7-4ffe-98ab-ae162c51f148
+revision: 6e1ad5d4-f1b1-4249-a697-f19f0fab10eb
 
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
@@ -28,28 +35,21 @@ name: __Created
 key: __created
 content-length: 16
 
-20161223T213500Z
-----field----
-field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
-name: __Created by
-key: __created by
-content-length: 14
-
-sitecore\admin
+20170102T143944Z
 ----field----
 field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
 name: __Revision
 key: __revision
 content-length: 36
 
-7262c76b-60c7-4ffe-98ab-ae162c51f148
+6e1ad5d4-f1b1-4249-a697-f19f0fab10eb
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 16
 
-20161223T213501Z
+20170102T143944Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

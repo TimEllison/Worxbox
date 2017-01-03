@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Workflow.cs" />
+    <Compile Include="Extensions\RulesExtensions.cs" />
     <Compile Include="Filter\IItemFilterer.cs" />
     <Compile Include="Filter\WorxBoxItemFilterer.cs" />
     <Compile Include="Models\Operator.cs" />

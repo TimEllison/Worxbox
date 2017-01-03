@@ -1,0 +1,66 @@
+----item----
+version: 1
+id: {81E4B6A8-1CE1-4ED4-A6E5-514284279ADE}
+database: master
+path: /sitecore/system/Settings/Rules/WorxBox/Rules
+parent: {DA404B80-9EBC-4861-B08C-38474575EA9A}
+name: Rules
+master: {BDC41FDD-A3AC-4B69-A0BA-471C425CB083}
+template: {8EA2CF67-4250-47A2-AECA-4F70FD200DC7}
+templatekey: Rules Folder
+created: 20170102T141113:636189630734270000
+
+----field----
+field: {F6D8A61C-2F84-4401-BD24-52D2068172BC}
+name: __Originator
+key: __originator
+content-length: 38
+
+{9AD7A893-37D9-4726-8FA4-E23B3F9DB826}
+----version----
+language: en
+version: 1
+revision: 860280cb-57c1-49c2-a943-aef3ab751abe
+
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 12
+
+sitecore\tim
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 16
+
+20170102T141113Z
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 12
+
+sitecore\tim
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+860280cb-57c1-49c2-a943-aef3ab751abe
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 16
+
+20170102T141113Z
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 12
+
+sitecore\tim
