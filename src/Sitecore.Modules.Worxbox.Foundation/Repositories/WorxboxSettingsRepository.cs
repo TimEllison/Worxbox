@@ -35,17 +35,6 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
             return items;
         }
 
-        public IEnumerable<WorxboxFilterField> GetFilterFields()
-        {
-            var items = Client.ContentDatabase.GetItem(FieldFilterFolderId).Children;
-            var result = items.ToArray().Select(item => new WorxboxFilterField
-            {
-                FieldName = item["Field Name"],
-                FriendlyName = item["Friendly Name"]
-            }).ToList();
-            return result;
-        }
-
         public Item GetUserFilter()
         {
             var userFilterFolder = Client.ContentDatabase.GetItem(UserFilterFolderId);
