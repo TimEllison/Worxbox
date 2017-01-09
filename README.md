@@ -9,7 +9,8 @@ just their changes.  Using the rules engine for filtering provides a very high d
 
 ## Versions  
 
-Sitecore 8.1 - http://bit.ly/2hrSyLN
+Sitecore 8.1 - http://bit.ly/2hrSyLN   
+
 Sitecore 8.2 - http://bit.ly/2hrSyLN
 
 ## Limitations
