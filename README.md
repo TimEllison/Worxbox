@@ -11,9 +11,18 @@ just their changes.  Using the rules engine for filtering provides a very high d
 
 Sitecore 8.1 - http://bit.ly/2hrSyLN
 
-## Limitations
+## How It Worx
 
-Worxbox composes pages based on references from specific page templates.  As an example, when a new page is created renderings are added and those renderings point to specific data sources.  This creates a reference in the links database from the Page template's Renderings field (Shared or Final) to the data source.  I bring this to your attention because Worxbox does not handle other practices such as child items or dynamically selected content (e.g., a rendering performs a search and displays items based on the search results). That said, you can rest assured that when an approver submits content through Workflow, the "Page" and its references will all be submitted as a single unit of work.  
+WorxBox composes pages based on data source references from renderings, their child items and references, and parents.  As long as the Links database is healthy WorxBox should capture references.  
+Imagine a new page with a call to action button that references a call to action content item living in a new call to action content item folder.  In addition the call to action content item references an image in the media library also in a new media library folder.  WorxBox will return the page plus the new items under workflow.
+
+Based on testing, WorxBox will omit circular references (Stack Overflows are not fun in recursive operations!) and references made to content deriving from templates specified as WorxBox templates.  
+
+Currently, the commands accessed via the gutter in content editor tie into WorxBox as do the commands in the Review ribbon and the Experience Editor commands.  
+
+### WorxBox Filtering  
+
+WorxBox filtering in the Workbox is based on Sitecore's Rules Engine.  Based on tagging, a minimal subset of existing rules are included.  If you're new to the Rules Engine, the Rules Engine Cookbook found on sdn.sitecore.net is a good starter read.  
 
 ## Known Issues
 
