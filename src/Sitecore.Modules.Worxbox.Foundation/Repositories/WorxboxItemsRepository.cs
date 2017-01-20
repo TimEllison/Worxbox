@@ -49,6 +49,20 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
                     }
                 }
             }
+
+            foreach (var childItem in item.Axes.GetDescendants())
+            {
+                if (childItem != null && IsCompositable(state, childItem) && visitedItems.All(x => x != childItem.ID))
+                {
+                    if (!results.Any(
+                        x => x.ID == childItem.ID && x.Language == childItem.Language && x.Version == childItem.Version))
+                    {
+                        results.Add(childItem);
+                        visitedItems.Add(childItem.ID);
+                        results.AddRange(GetWorxboxItems(state, childItem, visitedItems));
+                    }
+                }
+            }
             return results;
         }
 
