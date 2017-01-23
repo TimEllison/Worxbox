@@ -129,6 +129,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManager\Panels\WorxBoxWorkflowPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workbox\WorxboxFilterForm.cs" />
     <Compile Include="Workbox\WorxboxForm.cs" />
