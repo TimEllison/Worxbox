@@ -49,7 +49,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.ContentManager.Panels
             if (workflow == null && !flag1 && (!flag2 && !flag3))
                 return;
 
-            var repository = new WorxboxItemsRepository(workflow);
+           
 
             Context.ClientPage.ClientResponse.DisableOutput();
             ribbon.BeginSmallButtons(output);
@@ -65,6 +65,8 @@ namespace CapTech.Modules.Worxbox.Feature.Client.ContentManager.Panels
                 this.RenderSmallButton(output, ribbon, Sitecore.Web.UI.HtmlControls.Control.GetUniqueID("B"), Translate.Text("History"), "Office/16x16/history.png", Translate.Text("Show the workflow history."), "item:workflowhistory", this.Enabled, false);
             if (flag2)
             {
+                var repository = new WorxboxItemsRepository(workflow);
+
                 foreach (WorkflowCommand command in commands)
                 {
                     this.RenderSmallButton(output, ribbon, string.Empty, command.DisplayName, command.Icon, command.DisplayName, 
