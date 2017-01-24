@@ -81,7 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Workflow.cs" />
+    <Compile Include="Commands\CompositeWorkflow.cs" />
+    <Compile Include="Commands\ShowWorxBoxWorkflowCommands.cs" />
+    <Compile Include="Commands\WorxBoxWorkflowCommandBuilder.cs" />
     <Compile Include="Extensions\RulesExtensions.cs" />
     <Compile Include="Filter\IItemFilterer.cs" />
     <Compile Include="Filter\WorxBoxItemFilterer.cs" />

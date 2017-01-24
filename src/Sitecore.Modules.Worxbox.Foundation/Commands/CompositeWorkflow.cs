@@ -19,7 +19,7 @@ namespace CapTech.Modules.Worxbox.Foundation.Commands
 {
     /// <summary>Represents the Workflow command.</summary>
     [Serializable]
-    public class Workflow : Command
+    public class CompositeWorkflow : Command
     {
         /// <summary>Key used to identify the ID</summary>
         protected const string IDKey = "id";

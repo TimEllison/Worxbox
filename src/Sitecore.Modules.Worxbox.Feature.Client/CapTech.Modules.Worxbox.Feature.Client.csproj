@@ -82,6 +82,10 @@
       <HintPath>..\packages\Sitecore.Client.8.1.160519\lib\NET45\Sitecore.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Sitecore.ExperienceEditor, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.ExperienceEditor.NoReferences.8.1.160519\lib\NET45\Sitecore.ExperienceEditor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Sitecore.Kernel, Version=8.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sitecore.Kernel.8.1.160519\lib\NET45\Sitecore.Kernel.dll</HintPath>
       <Private>True</Private>
@@ -129,6 +133,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManager\Panels\WorxBoxWorkflowPanel.cs" />
+    <Compile Include="ExperienceEditor\GetWorxBoxWorkflowNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workbox\WorxboxFilterForm.cs" />
     <Compile Include="Workbox\WorxboxForm.cs" />
