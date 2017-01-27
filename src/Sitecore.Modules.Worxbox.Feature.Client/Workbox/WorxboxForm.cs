@@ -11,6 +11,7 @@ using CapTech.Modules.Worxbox.Foundation.Filter;
 using CapTech.Modules.Worxbox.Foundation.Models;
 using CapTech.Modules.Worxbox.Foundation.Repositories;
 using Sitecore;
+using Sitecore.Analytics.Extensions;
 using Sitecore.Collections;
 using Sitecore.Configuration;
 using Sitecore.Data;
@@ -91,6 +92,65 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             _filterer = new WorxBoxItemFilterer();
         }
 
+        public void CompositeComment(ClientPipelineArgs args)
+        {
+            Assert.ArgumentNotNull((object)args, "args");
+            ID result1 = ID.Null;
+            if (Context.ClientPage.ServerProperties["command"] != null)
+                ID.TryParse(Context.ClientPage.ServerProperties["command"] as string, out result1);
+            ItemUri itemUri = new ItemUri((Context.ClientPage.ServerProperties["id"] ?? (object)string.Empty).ToString(), Language.Parse(Context.ClientPage.ServerProperties["language"] as string), Sitecore.Data.Version.Parse(Context.ClientPage.ServerProperties["version"] as string), Context.ContentDatabase);
+            bool flag = args.Parameters["ui"] != null && args.Parameters["ui"] == "1" || args.Parameters["suppresscomment"] != null && args.Parameters["suppresscomment"] == "1";
+            if (!args.IsPostBack && result1 != (ID)null && !flag)
+            {
+                WorkflowUIHelper.DisplayCommentDialog(itemUri, result1);
+                args.WaitForPostBack();
+            }
+            else if (args.Result != null && args.Result.Length > 2000)
+            {
+                Context.ClientPage.ClientResponse.ShowError(new Exception(string.Format("The comment is too long.\n\nYou have entered {0} characters.\nA comment cannot contain more than 2000 characters.", (object)args.Result.Length)));
+                WorkflowUIHelper.DisplayCommentDialog(itemUri, result1);
+                args.WaitForPostBack();
+            }
+            else
+            {
+                if ((args.Result == null || !(args.Result != "null") || (!(args.Result != "undefined") || !(args.Result != "cancel"))) && !flag)
+                    return;
+                string result2 = args.Result;
+                Sitecore.Collections.StringDictionary commentFields = string.IsNullOrEmpty(result2) ? new Sitecore.Collections.StringDictionary() :
+                    WorkflowUIHelper.ExtractFieldsFromFieldEditor(result2);
+                try
+                {
+                    IWorkflow workflowFromPage = this.GetWorkflowFromPage();
+                    if (workflowFromPage == null)
+                        return;
+                    Item obj = Database.GetItem(itemUri);
+                    if (obj == null)
+                        return;
+
+                    var repository = new WorxboxItemsRepository(workflowFromPage);
+                    var compositeStates = repository.GetWorxboxWorkflowStates(workflowFromPage);
+                    var workflowState = workflowFromPage.GetState(obj);
+
+                    var completionCallback = new Processor("Workflow complete state item count", (object)this, "ChildWorkflowComplete");
+
+                    var compositeItems =
+                        repository.GetWorxboxItems(
+                            compositeStates.First(x => x.WorkflowState.StateID.Equals(workflowState.StateID)), obj);
+                    foreach (var compositeItem in compositeItems)
+                    {
+                        WorkflowUIHelper.ExecuteCommand(compositeItem, workflowFromPage, Context.ClientPage.ServerProperties["command"] as string, commentFields, completionCallback);
+                    }
+
+                    completionCallback = new Processor("Workflow complete state item count", (object)this, "WorkflowCompleteStateItemCount");
+                    WorkflowUIHelper.ExecuteCommand(obj, workflowFromPage, Context.ClientPage.ServerProperties["command"] as string, commentFields, completionCallback);
+                }
+                catch (WorkflowStateMissingException ex)
+                {
+                    SheerResponse.Alert("One or more items could not be processed because their workflow state does not specify the next step.");
+                }
+            }
+        }
+
         public void Comment(ClientPipelineArgs args)
         {
             Assert.ArgumentNotNull((object)args, "args");
@@ -126,23 +186,9 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                     if (obj == null)
                         return;
 
-                    var repository = new WorxboxItemsRepository(workflowFromPage);
-                    var compositeStates = repository.GetWorxboxWorkflowStates(workflowFromPage);
                     var workflowState = workflowFromPage.GetState(obj);
 
-                    var completionCallback = new Processor("Workflow complete state item count", (object)this, "ChildWorkflowComplete");
-
-                    if (repository.IsWorxboxItem(workflowState, new DataUri(obj.Uri)))
-                    {
-                        var compositeItems =
-                            repository.GetWorxboxItems(
-                                compositeStates.First(x => x.WorkflowState.StateID.Equals(workflowState.StateID)), obj);
-                        foreach (var compositeItem in compositeItems)
-                        {
-                            WorkflowUIHelper.ExecuteCommand(compositeItem, workflowFromPage, Context.ClientPage.ServerProperties["command"] as string, commentFields, completionCallback);
-                        }
-                    }
-                    completionCallback = new Processor("Workflow complete state item count", (object)this, "WorkflowCompleteStateItemCount");
+                    var completionCallback = new Processor("Workflow complete state item count", (object)this, "WorkflowCompleteStateItemCount");
                     WorkflowUIHelper.ExecuteCommand(obj, workflowFromPage, Context.ClientPage.ServerProperties["command"] as string, commentFields, completionCallback);
                 }
                 catch (WorkflowStateMissingException ex)
@@ -185,6 +231,15 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             Assert.ArgumentNotNull((object)message, "message");
             switch (message.Name)
             {
+                case "worxbox:send":
+                    this.SendComposite(message);
+                    break;
+                case "worxbox:sendselected":
+                    this.SendCompositeSelected(message);
+                    break;
+                case "worxbox:sendall":
+                    this.SendCompositeAll(message);
+                    break;
                 case "workflow:send":
                     this.Send(message);
                     return;
@@ -305,7 +360,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 xmlControl1["Icon"] = (object)filterVisibleCommand.Icon;
                 xmlControl1["Command"] =
                     (object)
-                        ("workflow:sendselected(command=" + filterVisibleCommand.CommandID + ",ws=" +
+                        ("worxbox:sendselected(command=" + filterVisibleCommand.CommandID + ",ws=" +
                          state.WorkflowState.StateID + ",wf=" + workflow.WorkflowID + ")");
                 border2.Controls.Add((System.Web.UI.Control)xmlControl1);
                 XmlControl xmlControl2 = Resource.GetWebControl("WorkboxCommand") as XmlControl;
@@ -314,7 +369,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 xmlControl2["Icon"] = (object)filterVisibleCommand.Icon;
                 xmlControl2["Command"] =
                     (object)
-                        ("workflow:sendall(command=" + filterVisibleCommand.CommandID + ",ws=" +
+                        ("worxbox:sendall(command=" + filterVisibleCommand.CommandID + ",ws=" +
                          state.WorkflowState.StateID + ",wf=" + workflow.WorkflowID + ")");
                 border2.Controls.Add((System.Web.UI.Control)xmlControl2);
             }
@@ -701,7 +756,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
         /// <param name="command">The command.</param>
         /// <param name="item">The item.</param>
         /// <param name="workboxItem">The workbox item.</param>
-        private void CreateCommand(IWorkflow workflow, WorkflowCommand command, Item item, XmlControl workboxItem)
+        private void CreateCommand(IWorkflow workflow, WorkflowCommand command, Item item, XmlControl workboxItem, string message="workflow:send")
         {
             Assert.ArgumentNotNull((object)workflow, "workflow");
             Assert.ArgumentNotNull((object)command, "command");
@@ -711,7 +766,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             Assert.IsNotNull((object)xmlControl, "workboxCommand is null");
             xmlControl["Header"] = (object)command.DisplayName;
             xmlControl["Icon"] = (object)command.Icon;
-            CommandBuilder commandBuilder = new CommandBuilder("workflow:send");
+            CommandBuilder commandBuilder = new CommandBuilder(message);
             commandBuilder.Add("id", item.ID.ToString());
             commandBuilder.Add("la", item.Language.Name);
             commandBuilder.Add("vs", item.Version.ToString());
@@ -804,7 +859,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
 
             foreach (WorkflowCommand filterVisibleCommand in commands)
             {
-                this.CreateCommand(workflow, filterVisibleCommand, item, workboxItem);
+                this.CreateCommand(workflow, filterVisibleCommand, item, workboxItem, message:"worxbox:send");
             }
         }
 
@@ -1022,6 +1077,36 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             Context.ClientPage.ClientResponse.SetOuterHtml(str + "_content", (System.Web.UI.Control)border2);
         }
 
+        private void SendComposite(Message message)
+        {
+            Assert.ArgumentNotNull((object)message, "message");
+            IWorkflowProvider workflowProvider = Context.ContentDatabase.WorkflowProvider;
+            if (workflowProvider == null)
+                return;
+            string workflowID = message["wf"];
+            if (workflowProvider.GetWorkflow(workflowID) == null ||
+                Context.ContentDatabase.Items[
+                    message["id"], Language.Parse(message["la"]), global::Sitecore.Data.Version.Parse(message["vs"])] ==
+                null)
+                return;
+            Context.ClientPage.ServerProperties["id"] = (object)message["id"];
+            Context.ClientPage.ServerProperties["language"] = (object)message["la"];
+            Context.ClientPage.ServerProperties["version"] = (object)message["vs"];
+            Context.ClientPage.ServerProperties["command"] = (object)message["command"];
+            Context.ClientPage.ServerProperties["workflowid"] = (object)workflowID;
+            Context.ClientPage.Start((object)this, "CompositeComment", new NameValueCollection()
+            {
+                {
+                    "ui",
+                    message["ui"]
+                },
+                {
+                    "suppresscomment",
+                    message["suppresscomment"]
+                }
+            });
+        }
+
         /// <summary>Sends the specified message.</summary>
         /// <param name="message">The message.</param>
         private void Send(Message message)
@@ -1054,6 +1139,62 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             });
         }
 
+        private void SendCompositeAll(Message message)
+        {
+            Assert.ArgumentNotNull((object)message, "message");
+            IWorkflowProvider workflowProvider = Context.ContentDatabase.WorkflowProvider;
+            if (workflowProvider == null)
+                return;
+            string workflowID = message["wf"];
+            string stateID = message["ws"];
+            IWorkflow workflow = workflowProvider.GetWorkflow(workflowID);
+            if (workflow == null)
+                return;
+            WorkflowState state = workflow.GetState(stateID);
+            DataUri[] items = this.GetItems(state, workflow);
+            Assert.IsNotNull((object)items, "uris is null");
+
+            var repository = new WorxboxItemsRepository(workflow);
+            var compositeStates = repository.GetWorxboxWorkflowStates(workflow);
+
+            var compositeState = compositeStates.First(x => x.WorkflowState.StateID.Equals(state.StateID));
+            var itemList = from index in items
+                where repository.IsWorxboxItem(state, index)
+                select index;
+
+            bool flag = false;
+            foreach (var index in itemList)
+            {
+                var obj = Context.ContentDatabase.Items[index];
+                if (obj != null)
+                {
+                    try
+                    {
+                        var completionCallback = new Processor("Workflow complete refresh", (object)this, "ChildWorkflowComplete");
+
+                        var additionalItems =
+                            repository.GetWorxboxItems(
+                                compositeStates.First(x => x.WorkflowState.StateID.Equals(state.StateID)), obj);
+                        foreach (var compositeItem in additionalItems)
+                        {
+                            WorkflowUIHelper.ExecuteCommand(compositeItem, workflow, message["command"], (Sitecore.Collections.StringDictionary)null, completionCallback);
+                        }
+
+                        completionCallback = new Processor("Workflow complete refresh", (object)this, "WorkflowCompleteRefresh");
+                        WorkflowUIHelper.ExecuteCommand(obj, workflow, message["command"], (Sitecore.Collections.StringDictionary)null, completionCallback);
+                    }
+                    catch (WorkflowStateMissingException)
+                    {
+                        flag = true;
+                    }
+                }
+            }
+            if (!flag)
+                return;
+            SheerResponse.Alert(
+                "One or more items could not be processed because their workflow state does not specify the next step.");
+        }
+
         /// <summary>Sends all.</summary>
         /// <param name="message">The message.</param>
         private void SendAll(Message message)
@@ -1070,9 +1211,6 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             WorkflowState state = workflow.GetState(stateID);
             DataUri[] items = this.GetItems(state, workflow);
             Assert.IsNotNull((object)items, "uris is null");
-            
-            var repository = new WorxboxItemsRepository(workflow);
-            var compositeStates = new List<WorxboxWorkflowState>();
 
             bool flag = false;
             foreach (DataUri index in items)
@@ -1082,18 +1220,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                 {
                     try
                     {
-                        var completionCallback = new Processor("Workflow complete refresh", (object)this, "ChildWorkflowComplete");
-                        if (repository.IsWorxboxItem(state, index) && compositeStates.Any(x=> x.WorkflowState.StateID.Equals(stateID)))
-                        {
-                            var additionalItems =
-                                repository.GetWorxboxItems(
-                                    compositeStates.First(x => x.WorkflowState.StateID.Equals(stateID)), obj);
-                            foreach (var compositeItem in additionalItems)
-                            {
-                                WorkflowUIHelper.ExecuteCommand(compositeItem, workflow, message["command"], (Sitecore.Collections.StringDictionary)null, completionCallback);
-                            }
-                        }
-                        completionCallback = new Processor("Workflow complete refresh", (object)this, "WorkflowCompleteRefresh");
+                        var completionCallback = new Processor("Workflow complete refresh", (object)this, "WorkflowCompleteRefresh");
                         WorkflowUIHelper.ExecuteCommand(obj, workflow, message["command"], (Sitecore.Collections.StringDictionary)null, completionCallback);
                     }
                     catch (WorkflowStateMissingException)
@@ -1121,6 +1248,67 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
         {
             this.Refresh();
         }
+
+        private void SendCompositeSelected(Message message)
+        {
+            Assert.ArgumentNotNull((object)message, "message");
+            IWorkflowProvider workflowProvider = Context.ContentDatabase.WorkflowProvider;
+            if (workflowProvider == null)
+                return;
+            string workflowID = message["wf"];
+            string str = message["ws"];
+            IWorkflow workflow = workflowProvider.GetWorkflow(workflowID);
+            if (workflow == null)
+                return;
+            int num = 0;
+            bool flag = false;
+
+            var repository = new WorxboxItemsRepository(workflow);
+            var compositeStates = repository.GetWorxboxWorkflowStates(workflow);
+
+            foreach (string key in Context.ClientPage.ClientRequest.Form.Keys)
+            {
+                if (key != null && key.StartsWith("check_", StringComparison.InvariantCulture))
+                {
+                    string[] strArray = Context.ClientPage.ClientRequest.Form["hidden_" + key.Substring(6)].Split(',');
+                    Item obj =
+                        Context.ContentDatabase.Items[
+                            strArray[0], Language.Parse(strArray[1]), global::Sitecore.Data.Version.Parse(strArray[2])];
+                    if (obj != null)
+                    {
+                        WorkflowState state = workflow.GetState(obj);
+                        if (state.StateID == str)
+                        {
+                            try
+                            {
+                                var compositeItems =
+                                       repository.GetWorxboxItems(
+                                           compositeStates.First(x => x.WorkflowState.StateID.Equals(state.StateID)),
+                                               obj);
+                                foreach (var compositeItem in compositeItems)
+                                {
+                                    workflow.Execute(message["command"], compositeItem, state.DisplayName, true);
+                                }
+                                workflow.Execute(message["command"], obj, state.DisplayName, true);
+                            }
+                            catch (WorkflowStateMissingException)
+                            {
+                                flag = true;
+                            }
+                            ++num;
+                        }
+                    }
+                }
+            }
+            if (flag)
+                SheerResponse.Alert(
+                    "One or more items could not be processed because their workflow state does not specify the next step.");
+            if (num == 0)
+                Context.ClientPage.ClientResponse.Alert("There are no selected items.");
+            else
+                this.Refresh();
+        }
+
 
         /// <summary>Sends the selected.</summary>
         /// <param name="message">The message.</param>
@@ -1156,17 +1344,6 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
                         {
                             try
                             {
-                                if (repository.IsWorxboxItem(state, new DataUri(obj.Uri)))
-                                {
-                                    var compositeItems =
-                                        repository.GetWorxboxItems(
-                                            compositeStates.First(x => x.WorkflowState.StateID.Equals(state.StateID)),
-                                                obj);
-                                    foreach (var compositeItem in compositeItems)
-                                    {
-                                        workflow.Execute(message["command"], compositeItem, state.DisplayName, true);
-                                    }
-                                }
                                 workflow.Execute(message["command"], obj, state.DisplayName, true);
                             }
                             catch (WorkflowStateMissingException)
