@@ -20,7 +20,7 @@ Imagine a new page with a call to action button that references a call to action
 
 Based on testing, WorxBox will omit circular references (Stack Overflows are not fun in recursive operations!) and references made to content deriving from templates specified as WorxBox templates.  
 
-Currently, the commands accessed via the gutter in content editor tie into WorxBox as do the commands in the Review ribbon and the Experience Editor commands.  
+As a result of a recent request, we have altered the way Content Editor gutter, ribbon and Experience Editor workflow panel operate with WorxBox.  Now, content authors will get the original commands as well as WorxBox commands.  As an example, if a content item is compositable (its template is defined as composite), WorxBox will show 2 commands; one representing Sitecore's default command and one for composite submission.
 
 ### WorxBox Filtering  
 
