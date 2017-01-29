@@ -1,6 +1,6 @@
 # Welcome to ![WorxBox](https://dl.dropboxusercontent.com/u/67850614/worxbox.png)
 
-This is a workbox plug-in for Sitecore 8.1 and 8.2. Future releases will include support for 8.0 although I highly recommend that you upgrade to 8.2 as soon as possible.
+This is a workbox plug-in for Sitecore 8.0, 8.1 and 8.2.
 
 The goal of Worxbox is to provide content authors and approvers with the ability to submit compositions of work based on Page templates and their references (through links from Page template fields and through Presentation references).
 
@@ -8,6 +8,8 @@ The updated release now provides users with the ability to create a custom rule 
 just their changes.  Using the rules engine for filtering provides a very high degree of extensibility through the addition of new rules.  Changing the filtering is as easy as using the default Sitecore Rules Editor.  
 
 ## Versions  
+
+Sitecore 8.0 - http://bit.ly/2jk3Eam
 
 Sitecore 8.1 - http://bit.ly/2hrSyLN   
 
@@ -28,5 +30,5 @@ WorxBox filtering in the Workbox is based on Sitecore's Rules Engine.  Based on 
 
 ## Known Issues
 
-Sitecore 8.1 has a known issue in which items referenced as Data Sources for renderings selected under personalization conditions do not get added as references.  This issue does not exist in 8.2 Update 1.  
-To resolve this issue in your 8.1 version of Sitecore, please visit the Github project http://bit.ly/2hTTklJ
+Sitecore 8.0 and 8.1 have a known issue in which items referenced as Data Sources for renderings selected under personalization conditions do not get added as references.  This issue does not exist in 8.2 Update 1.  
+To resolve this issue in your 8.0 or 8.1 version of Sitecore, please visit the Github project http://bit.ly/2hTTklJ
