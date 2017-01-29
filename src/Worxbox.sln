@@ -20,6 +20,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Worxbox", "CapTech.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.WorxBox.Feature.Rules", "CapTech.Modules.WorxBox.Feature.Rules\CapTech.Modules.WorxBox.Feature.Rules.csproj", "{FEA6585D-6278-4AFB-8492-1D72CF48C153}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sitecore 8.0", "Sitecore 8.0", "{D3C27412-22AE-4F39-8EA0-CAD0CF136241}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.WorxBox.Feature.Rules", "Sitecore 8.0\CapTech.Modules.WorxBox.Feature.Rules\CapTech.Modules.WorxBox.Feature.Rules.csproj", "{829F9B40-D395-4E15-A320-19597B1F2A45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.Worxbox.Feature.Client", "Sitecore 8.0\Sitecore.Modules.Worxbox.Feature.Client\CapTech.Modules.Worxbox.Feature.Client.csproj", "{EB5F67A1-6661-4120-8327-53D588676BF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Worxbox", "Sitecore 8.0\CapTech.Worxbox\CapTech.Worxbox.csproj", "{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.Worxbox.Foundation", "Sitecore 8.0\Sitecore.Modules.Worxbox.Foundation\CapTech.Modules.Worxbox.Foundation.csproj", "{437990C6-6C70-48A3-80BE-C6FB396C120C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,8 +60,30 @@ Global
 		{FEA6585D-6278-4AFB-8492-1D72CF48C153}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEA6585D-6278-4AFB-8492-1D72CF48C153}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEA6585D-6278-4AFB-8492-1D72CF48C153}.Release|Any CPU.Build.0 = Release|Any CPU
+		{829F9B40-D395-4E15-A320-19597B1F2A45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{829F9B40-D395-4E15-A320-19597B1F2A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{829F9B40-D395-4E15-A320-19597B1F2A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{829F9B40-D395-4E15-A320-19597B1F2A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB5F67A1-6661-4120-8327-53D588676BF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB5F67A1-6661-4120-8327-53D588676BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB5F67A1-6661-4120-8327-53D588676BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB5F67A1-6661-4120-8327-53D588676BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{437990C6-6C70-48A3-80BE-C6FB396C120C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{437990C6-6C70-48A3-80BE-C6FB396C120C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{437990C6-6C70-48A3-80BE-C6FB396C120C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{437990C6-6C70-48A3-80BE-C6FB396C120C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{829F9B40-D395-4E15-A320-19597B1F2A45} = {D3C27412-22AE-4F39-8EA0-CAD0CF136241}
+		{EB5F67A1-6661-4120-8327-53D588676BF8} = {D3C27412-22AE-4F39-8EA0-CAD0CF136241}
+		{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3} = {D3C27412-22AE-4F39-8EA0-CAD0CF136241}
+		{437990C6-6C70-48A3-80BE-C6FB396C120C} = {D3C27412-22AE-4F39-8EA0-CAD0CF136241}
 	EndGlobalSection
 EndGlobal
