@@ -1,6 +1,6 @@
 # Welcome to ![WorxBox](https://dl.dropboxusercontent.com/u/67850614/worxbox.png)
 
-This is a workbox plug-in for Sitecore 8.0, 8.1 and 8.2.
+This is a workbox plug-in for Sitecore 7.5, Sitecore 8.0, 8.1 and 8.2.
 
 The goal of Worxbox is to provide content authors and approvers with the ability to submit compositions of work based on Page templates and their references (through links from Page template fields and through Presentation references).
 
@@ -8,6 +8,8 @@ The updated release now provides users with the ability to create a custom rule 
 just their changes.  Using the rules engine for filtering provides a very high degree of extensibility through the addition of new rules.  Changing the filtering is as easy as using the default Sitecore Rules Editor.  
 
 ## Versions  
+
+Sitecore 7.5 - http://bit.ly/2ucJoK5
 
 Sitecore 8.0 - http://bit.ly/2jk3Eam
 
