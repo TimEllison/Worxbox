@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.Worxbox.Foundation", "Sitecore.Modules.Worxbox.Foundation\CapTech.Modules.Worxbox.Foundation.csproj", "{0ED3D947-6F68-4F86-A608-529157AD7D77}"
 EndProject
@@ -29,6 +29,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Worxbox", "Sitecore 8.0\CapTech.Worxbox\CapTech.Worxbox.csproj", "{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.Worxbox.Foundation", "Sitecore 8.0\Sitecore.Modules.Worxbox.Foundation\CapTech.Modules.Worxbox.Foundation.csproj", "{437990C6-6C70-48A3-80BE-C6FB396C120C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sitecore 7.5", "Sitecore 7.5", "{53CDA282-2435-4CFE-A8A2-7335C174DAE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.WorxBox.Feature.Rules", "Sitecore 7.5\CapTech.Modules.WorxBox.Feature.Rules\CapTech.Modules.WorxBox.Feature.Rules.csproj", "{35638007-540C-4764-97EF-B79D810F55B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Worxbox", "Sitecore 7.5\CapTech.Worxbox\CapTech.Worxbox.csproj", "{2C2A5943-2FD9-4CE0-82F7-9EA1F4BDD705}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.Worxbox.Feature.Client", "Sitecore 7.5\Sitecore.Modules.Worxbox.Feature.Client\CapTech.Modules.Worxbox.Feature.Client.csproj", "{9D520054-2155-4EDA-8D79-9D782250B029}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapTech.Modules.Worxbox.Foundation", "Sitecore 7.5\Sitecore.Modules.Worxbox.Foundation\CapTech.Modules.Worxbox.Foundation.csproj", "{992CE7F9-65A4-4D2B-A916-BE30D80725CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +86,22 @@ Global
 		{437990C6-6C70-48A3-80BE-C6FB396C120C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{437990C6-6C70-48A3-80BE-C6FB396C120C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{437990C6-6C70-48A3-80BE-C6FB396C120C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35638007-540C-4764-97EF-B79D810F55B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35638007-540C-4764-97EF-B79D810F55B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35638007-540C-4764-97EF-B79D810F55B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35638007-540C-4764-97EF-B79D810F55B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C2A5943-2FD9-4CE0-82F7-9EA1F4BDD705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C2A5943-2FD9-4CE0-82F7-9EA1F4BDD705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C2A5943-2FD9-4CE0-82F7-9EA1F4BDD705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C2A5943-2FD9-4CE0-82F7-9EA1F4BDD705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D520054-2155-4EDA-8D79-9D782250B029}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D520054-2155-4EDA-8D79-9D782250B029}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D520054-2155-4EDA-8D79-9D782250B029}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D520054-2155-4EDA-8D79-9D782250B029}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992CE7F9-65A4-4D2B-A916-BE30D80725CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992CE7F9-65A4-4D2B-A916-BE30D80725CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992CE7F9-65A4-4D2B-A916-BE30D80725CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992CE7F9-65A4-4D2B-A916-BE30D80725CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,5 +111,9 @@ Global
 		{EB5F67A1-6661-4120-8327-53D588676BF8} = {D3C27412-22AE-4F39-8EA0-CAD0CF136241}
 		{E7321667-9B0F-4D8E-9D3B-1D80B94FD0D3} = {D3C27412-22AE-4F39-8EA0-CAD0CF136241}
 		{437990C6-6C70-48A3-80BE-C6FB396C120C} = {D3C27412-22AE-4F39-8EA0-CAD0CF136241}
+		{35638007-540C-4764-97EF-B79D810F55B7} = {53CDA282-2435-4CFE-A8A2-7335C174DAE1}
+		{2C2A5943-2FD9-4CE0-82F7-9EA1F4BDD705} = {53CDA282-2435-4CFE-A8A2-7335C174DAE1}
+		{9D520054-2155-4EDA-8D79-9D782250B029} = {53CDA282-2435-4CFE-A8A2-7335C174DAE1}
+		{992CE7F9-65A4-4D2B-A916-BE30D80725CF} = {53CDA282-2435-4CFE-A8A2-7335C174DAE1}
 	EndGlobalSection
 EndGlobal

@@ -93,6 +93,7 @@
     <Compile Include="Repositories\WorxboxSettingsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

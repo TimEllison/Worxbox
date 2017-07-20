@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2C2A5943-2FD9-4CE0-82F7-9EA1F4BDD705}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CapTech.Worxbox</RootNamespace>
+    <AssemblyName>CapTech.Worxbox</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sitecore modules\shell\Worxbox\FilterForm.xaml.xml" />
+    <Content Include="sitecore modules\shell\Worxbox\RulesEditor.css" />
+    <Content Include="sitecore modules\shell\Worxbox\RulesEditor.js" />
+    <Content Include="sitecore\shell\Override\Workbox.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sitecore\shell\themes\standard\worxbox.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Config\Include\zWorxBox\CapTech.WorxBox.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CapTech.Modules.WorxBox.Feature.Rules\CapTech.Modules.WorxBox.Feature.Rules.csproj">
+      <Project>{35638007-540c-4764-97ef-b79d810f55b7}</Project>
+      <Name>CapTech.Modules.WorxBox.Feature.Rules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sitecore.Modules.Worxbox.Feature.Client\CapTech.Modules.Worxbox.Feature.Client.csproj">
+      <Project>{9d520054-2155-4eda-8d79-9d782250b029}</Project>
+      <Name>CapTech.Modules.Worxbox.Feature.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sitecore.Modules.Worxbox.Foundation\CapTech.Modules.Worxbox.Foundation.csproj">
+      <Project>{992ce7f9-65a4-4d2b-a916-be30d80725cf}</Project>
+      <Name>CapTech.Modules.Worxbox.Foundation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(TargetDir)CapTech.Modules.*.dll"  "E:\dev\Sitecore75WorxBox\Website\bin"
+xcopy /Y /S "$(ProjectDir)\sitecore\shell\*.*" "E:\dev\Sitecore75WorxBox\Website\sitecore\shell"
+xcopy /Y /S "$(ProjectDir)\sitecore modules\*.*" "E:\dev\Sitecore75WorxBox\Website\sitecore modules"
+xcopy /Y /S "$(ProjectDir)\App_config\*.*" "E:\dev\Sitecore75WorxBox\Website\app_config"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

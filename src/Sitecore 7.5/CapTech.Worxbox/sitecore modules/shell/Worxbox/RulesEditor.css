@@ -1,0 +1,310 @@
+﻿.scConditionOption,
+.scConditionOption:link,
+.scConditionOption:visited,
+.scConditionOption:hover,
+.scConditionOption:active
+{
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+  .scConditionOption:active
+  {
+    color: #000000;
+  }
+
+  .scConditionOption:hover
+  {
+    color: #dc291e;
+    text-decoration: underline;
+  }
+
+.scActionOption,
+.scActionOption:link,
+.scActionOption:visited,
+.scActionOption:hover,
+.scActionOption:active
+{
+  color: #303030;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+  .scActionOption:active
+  {
+    color: #000000;
+  }
+
+  .scActionOption:hover
+  {
+    color: #dc291e;
+    text-decoration: underline;
+  }
+
+.scRule
+{
+  padding: 4px 4px 4px 5px;
+  color: #999999;
+}
+
+  .scRule div
+  {
+    display: none;
+  }
+
+.scRuleActive
+{
+  color: black !important;
+  font-weight: bold;
+}
+
+.scRuleHover
+{
+  background: #e3e3e3;
+}
+
+  .scRuleHover div
+  {
+    display: block !important;
+  }
+
+.scLine
+{
+  padding: 9px 4px 9px 4px;
+  position: relative;
+}
+
+  .scLine div
+  {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: -22px;
+    background: #e3e3e3;
+    padding: 3px 15px 0 0;
+    border: solid rgb(205, 205, 205) 1px;
+    border-right: none;
+    border-bottom: none;
+  }
+
+.ie .scLine div
+{
+  right: 8px;
+}
+
+.scLineHover
+{
+  background: #e3e3e3;
+}
+
+  .scLineHover div
+  {
+    display: block !important;
+  }
+
+.scLineButton
+{
+  color: #666666;
+  background: #e3e3e3;
+  padding-left: 15px;
+}
+
+.scLineButton img 
+{
+  height:16px;
+  width:16px;
+}
+
+.scLineButton:hover 
+{
+  -ms-opacity: 0.6;
+  opacity: 0.6;
+}
+
+.scAction
+{
+  padding: 2px 4px 2px 4px;
+}
+
+.scActionButton,
+.scActionButton:link,
+.scActionButton:visited,
+.scActionButton:hover,
+.scActionButton:active
+{
+  color: #dc291e;
+  text-decoration: none;
+}
+
+  .scActionButton:hover,
+  .scActionButton:active
+  {
+    color: #dc291e;
+    text-decoration: underline;
+  }
+
+.scRuleGlyph
+{
+  width: 14px;
+  height: 14px;
+  margin: 0px 0px 4px 0px;
+  vertical-align: bottom;
+  background: url("/sitecore/shell/themes/standard/images/WebFramework/expanders/triangle_collapsed.png");
+}
+
+.scRuleActive .scRuleGlyph
+{
+  background: url("/sitecore/shell/themes/standard/images/WebFramework/expanders/triangle_expanded.png") !important;
+}
+
+.scSectionGlyph
+{
+  width: 14px;
+  height: 14px;
+  margin: 0px 0px 4px 0px;
+  vertical-align: bottom;
+  background: url("/sitecore/shell/themes/standard/images/WebFramework/expanders/triangle_expanded.png");
+}
+
+.scSectionClosed .scSectionGlyph
+{
+  background: url("/sitecore/shell/themes/standard/images/WebFramework/expanders/triangle_collapsed.png") !important;
+}
+
+table.scDialogContentContainer
+{
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+.scFixedLayoutTable
+{
+  table-layout: fixed;
+}
+
+.scConditionsAndActions
+{
+  height: 50%;
+  overflow: hidden;
+}
+
+.scRuleDescription
+{
+  position: relative;
+  height: 50%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.scConditionsAndActions > div
+{
+  height: 100%;
+}
+
+.scConditions
+{
+  padding-right: 10px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.scMainContainer, .scMainContainerFinalCountEnabled
+{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 15px 15px 20px 15px;
+}
+
+.scMainContainerFinalCountEnabled
+{
+  bottom: 40px;
+}
+
+.scFinalCountContainer
+{
+  position: absolute;
+  height: 20px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 10px;
+  text-align: right;
+}
+
+  .scFinalCountContainer span
+  {
+    padding-right: 20px;
+  }
+
+.scConditions, .scActions
+{
+  position: relative;
+  display: inline-block;
+  width: 50%;
+}
+
+.ie .scConditions #Conditions, .ie .scActions #Actions
+{
+  height: 100%;
+}
+
+.scConditions #Conditions, .scActions #Actions
+{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  border: 1px solid;
+  border-color: #d6d6d6;
+}
+
+.scConditions #Conditions
+{
+  top: 50px;
+  right: 10px;
+}
+
+.scActions #Actions
+{
+  top: 60px;
+  padding: 5px;
+}
+
+#Conditions
+{
+  margin-top: 10px;
+  border: 1px solid;
+  border-color: #d6d6d6;
+  padding: 5px;
+  height: calc(100% - 75px);
+  min-height: 1px !important;
+}
+
+.scDescription
+{
+  position: absolute;
+  height: auto;
+  top: 20px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid;
+  border-color: #d6d6d6;
+}
+
+.scDescriptionLabel 
+{
+  margin-top: 5px;
+}
+
+.selectConditions, .selectActions {
+    padding-bottom: 5px;
+}
+
+.scActionSection, .scConditionSection {
+    font-weight: bold;
+}

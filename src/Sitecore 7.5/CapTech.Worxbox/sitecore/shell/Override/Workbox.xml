@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<control xmlns:def="Definition" xmlns="http://schemas.sitecore.net/Visual-Studio-Intellisense">
+    <Workbox>
+        <CodeBeside Type="CapTech.Modules.Worxbox.Feature.Client.Workbox.WorxboxForm, CapTech.Modules.Worxbox.Feature.Client"/>
+        <Stylesheet Src="Content Manager.css" DeviceDependant="true"/>
+        <Stylesheet Src="Ribbon.css" DeviceDependant="true"/>
+        <Stylesheet Src="Workbox.css" DeviceDependant="true"/>
+        <Stylesheet Src="/sitecore/shell/themes/navigator.css"/>
+        <Script Src="/sitecore/shell/Applications/Content Manager/Content Editor.js"/>
+
+        <Stylesheet Key="Workbox">
+            html { width:100%; height:100% }
+            body { width:100%; height:100%; overflow:auto }
+            #States table { width: 100%; }
+            .scRibbonGalleryList:hover  {
+            z-index: 999;
+            position: relative;
+            height: auto;
+            border: flat 1px #000
+            }
+        </Stylesheet>
+
+        <FormPage Application="Workbox">
+
+            <input type="hidden" id="scActiveRibbonStrip" name="scActiveRibbonStrip" />
+
+            <Border ID="Grid">
+
+                <Border ID="RibbonPanel"/>
+
+                <Border Padding="0px" Class="scLightBlueGradient scStretchAbsolute scRibbonWorkbox">
+
+                    <Border ID="Grid2">
+
+                        <Border ID="States">
+                        </Border>
+
+                    </Border>
+
+                </Border>
+
+            </Border>
+
+
+        </FormPage>
+    </Workbox>
+</control>
