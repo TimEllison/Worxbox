@@ -28,7 +28,7 @@
 
                 <Border ID="RibbonPanel"/>
 
-                <Border Padding="0px" Class="scLightBlueGradient scStretchAbsolute scRibbonWorkbox">
+                <Border Padding="0px" Class="scLightBlueGradient scStretchAbsolute scRibbonWorkbox"  Style="margin-top:67px;overflow:auto;">
 
                     <Border ID="Grid2">
 
