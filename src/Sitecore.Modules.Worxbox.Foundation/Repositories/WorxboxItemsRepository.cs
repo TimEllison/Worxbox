@@ -10,9 +10,48 @@ using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Workflows;
+using System;
 
 namespace CapTech.Modules.Worxbox.Foundation.Repositories
 {
+    internal class ItemList
+    {
+        private Dictionary<ID, Item> itemList;
+        public ItemList()
+        {
+            itemList = new Dictionary<ID, Item>();
+        }
+        public void Add(Item item)
+        {
+            if ( !itemList.Any( x => x.Key == item.ID))
+            {
+                itemList.Add(item.ID, item);
+            }
+        }
+
+        public void AddRange(IEnumerable<Item> items)
+        {
+            foreach(var item in items)
+            {
+                if ( !itemList.Any (x => x.Key == item.ID ))
+                {
+                    itemList.Add(item.ID, item);
+                }
+            }
+        }
+
+        public IEnumerable<Item> ToList()
+        {
+            return itemList.Select(x => x.Value);
+        }
+
+        public bool Contains(Item item)
+        {
+            return ToList().Any(x => x.ID == item.ID && x.Language == item.Language && x.Version == item.Version);
+        }
+    }
+
+
     public class WorxboxItemsRepository
     {
         internal static readonly ID WorxboxSettingsId = new ID("{2E5F1A78-7FD2-4CCA-BB06-F5EFDA1B16FB}");
@@ -28,18 +67,22 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
             _workflow = workflow;
             _settings = Client.ContentDatabase.GetItem(WorxboxSettingsId);
         }
-
+        
         private IEnumerable<Item> GetWorxboxItems(WorxboxWorkflowState state, Item item, List<ID> visitedItems)
         {
-            var referencedItems = Globals.LinkDatabase.GetReferences(item);
-            var results = new List<Item>();
-            foreach (var reference in referencedItems)
+            var referencedItems = (from x in Globals.LinkDatabase.GetReferences(item)
+                                   select x.TargetItemID)
+                                   .Distinct()
+                                   .ToList();
+
+            var results = new ItemList();
+
+            foreach (var itemId in referencedItems)
             {
-                var refItem = Context.ContentDatabase.GetItem(reference.TargetItemID);
+                var refItem = Context.ContentDatabase.GetItem(itemId);
                 if (refItem != null && IsCompositable(state, refItem) && visitedItems.All(x=>x != refItem.ID))
                 {
-                    if (!results.Any(
-                            x => x.ID == refItem.ID && x.Language == refItem.Language && x.Version == refItem.Version))
+                    if (!results.Contains(refItem) )
                     {
                         results.Add(refItem);
                         visitedItems.Add(refItem.ID);
@@ -54,8 +97,7 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
             {
                 if (childItem != null && IsCompositable(state, childItem) && visitedItems.All(x => x != childItem.ID))
                 {
-                    if (!results.Any(
-                        x => x.ID == childItem.ID && x.Language == childItem.Language && x.Version == childItem.Version))
+                    if (!results.Contains(childItem))
                     {
                         results.Add(childItem);
                         visitedItems.Add(childItem.ID);
@@ -63,7 +105,7 @@ namespace CapTech.Modules.Worxbox.Foundation.Repositories
                     }
                 }
             }
-            return results;
+            return results.ToList();
         }
 
         private IEnumerable<Item> GetChildItems(WorxboxWorkflowState state, Item item, List<ID> visitedItems)
