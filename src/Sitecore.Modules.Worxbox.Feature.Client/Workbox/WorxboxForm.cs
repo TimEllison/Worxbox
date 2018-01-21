@@ -815,7 +815,7 @@ namespace CapTech.Modules.Worxbox.Feature.Client.Workbox
             {
                 var iconImage = ThemeManager.GetIconImage(oItem, 24, 24, "", "", "0 10px", oItem.ID.ToString(), false);
                 builder.AppendLine(
-                    $"<div><span>{iconImage}</span><span>{oItem.DisplayName} Version: {oItem.Version.Number} Language: {oItem.Language.Name}</span></div>");
+                    $"<div><span>{oItem.ID}</span><span>{iconImage}</span><span>{oItem.DisplayName} Version: {oItem.Version.Number} Language: {oItem.Language.Name}</span></div>");
             }
 
             builder.AppendLine("</div>");
