@@ -1,4 +1,4 @@
-# Welcome to ![WorxBox](https://dl.dropboxusercontent.com/u/67850614/worxbox.png)
+# Welcome to ![WorxBox](https://www.dropbox.com/s/p28vh2tdc6t7m37/worxbox.png?dl=0)
 
 This is a workbox plug-in for Sitecore 7.5, Sitecore 8.0, 8.1 and 8.2.
 
